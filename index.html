@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Vardhman Consultancy Services | Expert Financial & Business Advisory</title>
+<meta name="description" content="VCS – Your trusted financial and business advisory partner. Free initial consultation for taxation, GST, investments, loans, wealth management, and business advisory services across India."/>
+<meta name="keywords" content="Financial Advisor India, Tax Consultant India, Business Advisory Services, Investment Advisory, Home Loan Consultant, GST Consultant, Wealth Management Services, Virtual CFO Services"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0B1C3D;
+    --navy-light: #132850;
+    --emerald: #0E8A5A;
+    --emerald-light: #11A86D;
+    --gold: #C9973A;
+    --gold-light: #E5B55A;
+    --white: #FFFFFF;
+    --off-white: #F7F9FC;
+    --muted: #8A96A8;
+    --border: rgba(255,255,255,0.1);
+    --glass: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.12);
+    --shadow-navy: 0 20px 60px rgba(11,28,61,0.25);
+    --shadow-gold: 0 8px 32px rgba(201,151,58,0.2);
+    --shadow-emerald: 0 8px 32px rgba(14,138,90,0.2);
+    --radius: 16px;
+    --radius-sm: 8px;
+    --radius-lg: 24px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--off-white);
+    color: var(--navy);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: rgba(11,28,61,0.96);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 5%;
+    height: 68px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background 0.3s;
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo-mark {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; color: var(--navy); font-size: 16px;
+    letter-spacing: -0.5px;
+  }
+  .nav-logo-text { display: flex; flex-direction: column; }
+  .nav-logo-text span:first-child {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px; font-weight: 600; color: var(--white); line-height: 1.1;
+  }
+  .nav-logo-text span:last-child {
+    font-size: 9px; font-weight: 500; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex; gap: 28px; list-style: none;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.8); text-decoration: none;
+    font-size: 13.5px; font-weight: 500; letter-spacing: 0.2px;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 2px; background: var(--gold);
+    transform: scaleX(0); transition: transform 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .nav-ctas { display: flex; gap: 10px; }
+  .btn-nav-call {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--gold); color: var(--navy);
+    border: none; padding: 8px 16px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    text-decoration: none; white-space: nowrap;
+  }
+  .btn-nav-call:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-nav-wa {
+    display: flex; align-items: center; gap: 6px;
+    background: #25D366; color: var(--white);
+    border: none; padding: 8px 16px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    text-decoration: none; white-space: nowrap;
+  }
+  .btn-nav-wa:hover { background: #1ebe5d; transform: translateY(-1px); }
+
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .hamburger span { width: 22px; height: 2px; background: var(--white); border-radius: 2px; transition: all 0.3s; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--navy) 0%, #0D2347 50%, #0A3D2E 100%);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 5% 80px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 80% 40%, rgba(14,138,90,0.15) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 50% at 20% 70%, rgba(201,151,58,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Decorative grid */
+  .hero-grid-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-inner {
+    position: relative; z-index: 2;
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(201,151,58,0.12); border: 1px solid rgba(201,151,58,0.3);
+    border-radius: 50px; padding: 6px 16px; margin-bottom: 24px;
+    color: var(--gold); font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .hero-badge-dot { width: 6px; height: 6px; background: var(--emerald); border-radius: 50%; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.3); } }
+
+  .hero-pretext {
+    font-size: clamp(16px, 1.8vw, 20px);
+    color: rgba(255,255,255,0.6);
+    font-weight: 400; margin-bottom: 8px; line-height: 1.4;
+  }
+  .hero-service-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 5vw, 62px);
+    font-weight: 700; color: var(--gold);
+    line-height: 1.1; margin-bottom: 14px;
+    transition: opacity 0.4s, transform 0.4s;
+  }
+  .hero-service-tag {
+    font-size: clamp(14px, 1.5vw, 17px);
+    color: var(--emerald-light);
+    font-style: italic; font-weight: 500;
+    margin-bottom: 24px;
+    transition: opacity 0.4s, transform 0.4s;
+  }
+
+  .hero-sub {
+    color: rgba(255,255,255,0.65);
+    font-size: clamp(14px, 1.5vw, 16px);
+    line-height: 1.7; max-width: 540px;
+    margin-bottom: 36px;
+  }
+
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 44px; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--navy); border: none;
+    padding: 14px 28px; border-radius: 10px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: var(--shadow-gold);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,151,58,0.35); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    padding: 14px 28px; border-radius: 10px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    backdrop-filter: blur(8px);
+  }
+  .btn-secondary:hover { border-color: var(--gold); background: rgba(201,151,58,0.08); transform: translateY(-2px); }
+
+  .hero-trust {
+    display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .trust-pill {
+    display: flex; align-items: center; gap: 7px;
+    color: rgba(255,255,255,0.7); font-size: 12.5px; font-weight: 500;
+  }
+  .trust-pill-dot {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(14,138,90,0.2); border: 1px solid rgba(14,138,90,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; color: var(--emerald-light); flex-shrink: 0;
+  }
+
+  /* Hero card */
+  .hero-card {
+    background: var(--glass);
+    backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-navy);
+  }
+  .hero-card-header {
+    font-size: 11px; font-weight: 600; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase;
+    margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+  }
+  .hero-card-header::before {
+    content: ''; width: 24px; height: 1px; background: var(--gold);
+  }
+  .hero-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px; color: var(--white); margin-bottom: 6px;
+  }
+  .hero-card p { color: rgba(255,255,255,0.55); font-size: 12.5px; margin-bottom: 20px; }
+  .form-field {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px; padding: 11px 14px;
+    color: var(--white); font-size: 13px; width: 100%;
+    margin-bottom: 10px; outline: none;
+    transition: border-color 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .form-field::placeholder { color: rgba(255,255,255,0.35); }
+  .form-field:focus { border-color: var(--gold); }
+  select.form-field option { background: var(--navy); color: var(--white); }
+  .form-submit {
+    width: 100%;
+    background: linear-gradient(135deg, var(--emerald), var(--emerald-light));
+    color: var(--white); border: none;
+    padding: 13px; border-radius: 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 4px;
+    box-shadow: var(--shadow-emerald);
+  }
+  .form-submit:hover { transform: translateY(-1px); box-shadow: 0 12px 40px rgba(14,138,90,0.4); }
+  .form-note { text-align: center; color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 10px; }
+  .form-note span { color: var(--gold); }
+
+  /* ── TRUST BAR ── */
+  .trust-bar {
+    background: var(--navy);
+    padding: 20px 5%;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .trust-bar-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 32px;
+  }
+  .trust-item {
+    display: flex; align-items: center; gap: 10px;
+    color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 500;
+  }
+  .trust-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: rgba(201,151,58,0.12); border: 1px solid rgba(201,151,58,0.2);
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ── SECTION SHELLS ── */
+  section { padding: 80px 5%; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--emerald); margin-bottom: 10px; display: block;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 14px;
+  }
+  .section-title .accent { color: var(--emerald); }
+  .section-sub { color: #5A6A82; font-size: 15.5px; line-height: 1.7; max-width: 580px; }
+
+  /* ── PRODUCT CARDS ── */
+  .services-bg { background: #F0F4FA; }
+
+  .products-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px; margin-top: 48px;
+  }
+
+  .product-card {
+    background: var(--white);
+    border: 1px solid #E2EAF4;
+    border-radius: 20px;
+    padding: 0;
+    position: relative; overflow: hidden;
+    will-change: transform, box-shadow;
+    transition: transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94),
+                box-shadow 0.65s ease, border-color 0.5s;
+    display: flex; flex-direction: column;
+    cursor: default;
+  }
+  .product-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--emerald), var(--gold));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.65s ease;
+  }
+  .product-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 40px 90px rgba(11,28,61,0.18), 0 0 0 1.5px rgba(14,138,90,0.25);
+    border-color: transparent;
+  }
+  .product-card:hover::after { transform: scaleX(1); }
+
+  /* 16:9 image — flush at top, card's overflow:hidden clips corners */
+  .pc-img {
+    width: 100%; padding-top: 56.25%;
+    position: relative;
+    background: linear-gradient(135deg, #D6E4F0, #E8EFF8);
+    overflow: hidden; flex-shrink: 0;
+  }
+  .pc-img img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .product-card:hover .pc-img img { transform: scale(1.08); }
+
+  /* Dark gradient overlay on image on hover */
+  .pc-img::after {
+    content: '';
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(180deg, transparent 20%, rgba(11,28,61,0.65) 100%);
+    opacity: 0; transition: opacity 0.65s;
+  }
+  .product-card:hover .pc-img::after { opacity: 1; }
+
+  .pc-img-ph {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; opacity: 0.18; user-select: none;
+    transition: opacity 0.6s;
+  }
+  .product-card:hover .pc-img-ph { opacity: 0.08; }
+
+  /* Card text body */
+  .pc-body {
+    padding: 22px 24px 20px;
+    position: relative; flex: 1;
+    display: flex; flex-direction: column;
+  }
+
+  .pc-ghost {
+    position: absolute; top: 10px; right: 16px;
+    font-family: 'Playfair Display', serif;
+    font-size: 64px; font-weight: 700;
+    color: rgba(11,28,61,0.04); line-height: 1;
+    user-select: none; pointer-events: none;
+    transition: color 0.6s;
+  }
+  .product-card:hover .pc-ghost { color: rgba(14,138,90,0.07); }
+
+  .pc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px; font-weight: 700; color: var(--navy);
+    margin-bottom: 8px; line-height: 1.3;
+    transition: color 0.5s;
+  }
+  .product-card:hover .pc-title { color: var(--emerald); }
+
+  .pc-tagline {
+    font-size: 13px; color: #6A7A8E;
+    line-height: 1.65; margin-bottom: 16px; flex: 1;
+  }
+
+  .pc-divider {
+    height: 1px; background: #EEF2F8; margin-bottom: 12px;
+    transition: background 0.5s;
+  }
+  .product-card:hover .pc-divider { background: rgba(14,138,90,0.25); }
+
+  /* Sub-services — dark navy panel, reveals on hover (desktop) / always visible (mobile) */
+  .pc-list {
+    list-style: none; max-height: 0; overflow: hidden;
+    opacity: 0; border-radius: 12px;
+    background: linear-gradient(135deg, #0B1C3D 0%, #0E2550 100%);
+    padding: 0 14px; margin-bottom: 0;
+    transition: max-height 0.7s ease, opacity 0.55s, padding 0.55s, margin 0.55s;
+  }
+  @media (hover: hover) {
+    .product-card:hover .pc-list {
+      max-height: 300px; opacity: 1;
+      padding: 14px; margin-bottom: 14px;
+    }
+  }
+  /* Tap-open on touch: .open class added by JS */
+  .pc-list.open { max-height: 300px; opacity: 1; padding: 14px; margin-bottom: 14px; }
+
+  .pc-list li {
+    font-size: 12.5px; color: rgba(255,255,255,0.72);
+    padding: 6px 0; display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    transition: color 0.2s, padding-left 0.2s;
+  }
+  .pc-list li:last-child { border-bottom: none; }
+  .pc-list li:hover { color: var(--gold); padding-left: 5px; }
+  .pc-list li::before { content: '→'; color: var(--gold); font-size: 10px; flex-shrink: 0; }
+
+  .pc-footer {
+    display: flex; align-items: center; justify-content: flex-end;
+    margin-top: auto; padding-top: 2px;
+  }
+  .pc-cta {
+    font-size: 13px; font-weight: 700; color: var(--emerald);
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: gap 0.22s, color 0.22s;
+  }
+  .pc-cta:hover { gap: 10px; color: var(--gold); }
+
+  /* Mobile carousel */
+  .carousel-dots {
+    display: none; justify-content: center; gap: 6px; margin-top: 22px;
+  }
+  .c-dot {
+    height: 7px; width: 7px; border-radius: 4px; cursor: pointer;
+    background: rgba(11,28,61,0.15);
+    transition: width 0.3s, background 0.3s;
+    border: none;
+  }
+  .c-dot.active { width: 24px; background: var(--emerald); }
+
+  @media (max-width: 768px) {
+    /* Cards carousel */
+    .products-row {
+      display: flex; overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 16px; padding-bottom: 8px;
+      padding-left: 5%; padding-right: 5%;
+      margin-left: -5%; margin-right: -5%;
+      scrollbar-width: none; grid-template-columns: unset;
+    }
+    .products-row::-webkit-scrollbar { display: none; }
+    .product-card { flex: 0 0 78%; scroll-snap-align: start; min-width: 0; }
+    .carousel-dots { display: flex; }
+  }
+
+  /* ── WHO WE HELP ── */
+  .who-bg { background: var(--navy); }
+  .who-bg .section-title { color: var(--white); }
+  .who-bg .section-sub { color: rgba(255,255,255,0.55); }
+
+  .who-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 16px; margin-top: 48px;
+  }
+  .who-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 28px 20px;
+    text-align: center;
+    transition: background 0.3s, transform 0.3s, border-color 0.3s;
+    cursor: default;
+  }
+  .who-card:hover { background: rgba(255,255,255,0.1); border-color: rgba(201,151,58,0.4); transform: translateY(-3px); }
+  .who-emoji { font-size: 32px; margin-bottom: 12px; }
+  .who-card h4 { color: var(--white); font-size: 14px; font-weight: 600; line-height: 1.3; }
+
+  /* ── HOW IT WORKS ── */
+  .how-bg { background: var(--off-white); }
+
+  .steps {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0; margin-top: 48px; position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute; top: 44px; left: 12%; right: 12%; height: 2px;
+    background: linear-gradient(90deg, var(--emerald), var(--gold));
+    z-index: 0;
+  }
+  .step {
+    text-align: center; padding: 0 20px; position: relative; z-index: 1;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  .step.visible { opacity: 1; transform: translateY(0); }
+  .step:nth-child(2) { transition-delay: 0.1s; }
+  .step:nth-child(3) { transition-delay: 0.2s; }
+  .step:nth-child(4) { transition-delay: 0.3s; }
+  .step-num {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px; font-weight: 700; color: var(--gold);
+    border: 3px solid var(--off-white);
+    box-shadow: 0 0 0 3px var(--emerald);
+  }
+  .step h3 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .step p { font-size: 13px; color: #6A7A8E; line-height: 1.6; }
+
+  /* ── WHY VCS ── */
+  .why-bg { background: linear-gradient(135deg, var(--navy) 0%, #0A3D2E 100%); }
+  .why-bg .section-title { color: var(--white); }
+  .why-bg .section-sub { color: rgba(255,255,255,0.55); }
+
+  .why-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px; margin-top: 48px;
+  }
+  .why-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 28px;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .why-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-3px); }
+  .why-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px; font-weight: 700; color: rgba(201,151,58,0.2);
+    line-height: 1; margin-bottom: 12px;
+  }
+  .why-card h3 { font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+  .why-card p { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+
+  /* ── LEAD FORM ── */
+  .lead-bg { background: var(--off-white); }
+
+  .lead-inner {
+    display: grid; grid-template-columns: 1fr 480px; gap: 60px; align-items: start;
+  }
+  .lead-left { padding-top: 20px; }
+  .lead-left .section-title { margin-bottom: 20px; }
+  .lead-left p { color: #5A6A82; font-size: 15px; line-height: 1.7; margin-bottom: 24px; }
+  .lead-feature {
+    display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px;
+  }
+  .lead-icon {
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+    background: rgba(14,138,90,0.1); border: 1px solid rgba(14,138,90,0.2);
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+  }
+  .lead-feature-text h4 { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 2px; }
+  .lead-feature-text p { font-size: 12.5px; color: #6A7A8E; line-height: 1.5; }
+
+  .lead-form-card {
+    background: var(--white);
+    border: 1px solid #E0E8F0;
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    box-shadow: 0 8px 40px rgba(11,28,61,0.08);
+  }
+  .lead-form-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: var(--navy); margin-bottom: 6px;
+  }
+  .lead-form-card > p { font-size: 13px; color: #6A7A8E; margin-bottom: 24px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-light {
+    background: #F7F9FC; border: 1.5px solid #E0E8F0;
+    border-radius: 8px; padding: 11px 14px;
+    font-size: 13.5px; color: var(--navy); width: 100%;
+    outline: none; font-family: 'Inter', sans-serif;
+    transition: border-color 0.2s;
+    margin-bottom: 12px;
+  }
+  .field-light::placeholder { color: #A0AABB; }
+  .field-light:focus { border-color: var(--emerald); }
+  select.field-light option { color: var(--navy); }
+  .form-btns { display: flex; gap: 12px; margin-top: 4px; }
+  .btn-callback {
+    flex: 1; background: var(--navy); color: var(--white); border: none;
+    padding: 13px; border-radius: 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-callback:hover { background: var(--navy-light); transform: translateY(-1px); }
+  .btn-wa {
+    flex: 1; background: #25D366; color: var(--white); border: none;
+    padding: 13px; border-radius: 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .btn-wa:hover { background: #1ebe5d; transform: translateY(-1px); }
+
+  /* ── TESTIMONIALS ── */
+  .testi-bg { background: var(--navy); }
+  .testi-bg .section-title { color: var(--white); }
+  .testi-bg .section-sub { color: rgba(255,255,255,0.55); }
+  .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 48px; }
+  .testi-card {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: var(--radius); padding: 28px;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .testi-card:hover { background: rgba(255,255,255,0.09); transform: translateY(-3px); }
+  .stars { color: var(--gold); font-size: 14px; letter-spacing: 2px; margin-bottom: 14px; }
+  .testi-text { color: rgba(255,255,255,0.7); font-size: 13.5px; line-height: 1.7; margin-bottom: 18px; font-style: italic; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--emerald), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700;
+    color: var(--white); flex-shrink: 0;
+  }
+  .testi-name { color: var(--white); font-size: 14px; font-weight: 600; }
+  .testi-meta { color: rgba(255,255,255,0.4); font-size: 11.5px; margin-top: 2px; }
+
+  /* ── FAQ ── */
+  .faq-bg { background: var(--off-white); }
+  .faq-list { margin-top: 44px; max-width: 760px; }
+  .faq-item {
+    background: var(--white); border: 1px solid #E8EDF5;
+    border-radius: var(--radius-sm); margin-bottom: 10px; overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .faq-item:hover { box-shadow: 0 4px 20px rgba(11,28,61,0.06); }
+  .faq-q {
+    padding: 18px 22px; font-size: 14.5px; font-weight: 600; color: var(--navy);
+    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    user-select: none;
+  }
+  .faq-q::after { content: '+'; color: var(--emerald); font-size: 20px; font-weight: 400; transition: transform 0.3s; }
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.3s;
+    color: #5A6A82; font-size: 13.5px; line-height: 1.7;
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding: 0 22px 18px; }
+
+  /* ── FINAL CTA ── */
+  .final-cta {
+    background: linear-gradient(135deg, var(--emerald) 0%, var(--navy) 100%);
+    padding: 80px 5%; text-align: center; position: relative; overflow: hidden;
+  }
+  .final-cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 50% 80% at 50% 50%, rgba(201,151,58,0.1) 0%, transparent 70%);
+  }
+  .final-cta-inner { max-width: 660px; margin: 0 auto; position: relative; z-index: 1; }
+  .final-cta h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 3.5vw, 42px); font-weight: 700; color: var(--white); margin-bottom: 14px;
+  }
+  .final-cta p { color: rgba(255,255,255,0.7); font-size: 15px; margin-bottom: 32px; }
+  .final-cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-white {
+    background: var(--white); color: var(--navy); border: none;
+    padding: 14px 28px; border-radius: 10px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+  .btn-outline-white {
+    background: transparent; color: var(--white);
+    border: 1.5px solid rgba(255,255,255,0.5);
+    padding: 14px 28px; border-radius: 10px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-outline-white:hover { border-color: var(--white); background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #071228;
+    padding: 60px 5% 24px;
+    color: rgba(255,255,255,0.55);
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+  .footer-brand p { font-size: 13px; line-height: 1.7; max-width: 280px; margin: 16px 0 20px; }
+  .footer-social { display: flex; gap: 10px; }
+  .social-btn {
+    width: 34px; height: 34px; border-radius: 8px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.6); font-size: 13px; text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .social-btn:hover { background: var(--gold); color: var(--navy); }
+  .footer-col h4 { color: var(--white); font-size: 13px; font-weight: 600; margin-bottom: 16px; letter-spacing: 0.5px; }
+  .footer-col a {
+    display: block; color: rgba(255,255,255,0.5); font-size: 13px;
+    text-decoration: none; margin-bottom: 9px;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin-bottom: 20px; }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-bottom p { font-size: 12px; }
+  .footer-bottom-links { display: flex; gap: 20px; }
+  .footer-bottom-links a { color: rgba(255,255,255,0.4); font-size: 12px; text-decoration: none; transition: color 0.2s; }
+  .footer-bottom-links a:hover { color: var(--gold); }
+
+  /* ── HERO IMAGE PANEL ── */
+  .hero-img-panel {
+    position: relative; border-radius: 28px; overflow: hidden;
+    min-height: 460px;
+  }
+  .hero-svc-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    opacity: 0; will-change: opacity;
+    transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .hero-svc-img.active { opacity: 1; }
+  .hero-img-tint {
+    position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(135deg, rgba(11,28,61,0.28) 0%, rgba(0,0,0,0.08) 100%);
+  }
+
+  /* ── HERO SERVICE BAR ── */
+  .hero-svc-bar {
+    position: relative; z-index: 2;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 50px;
+    padding: 10px 12px;
+    backdrop-filter: blur(20px);
+    margin: 36px auto 0;
+    max-width: 1100px; width: 90%;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.07);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .hero-svc-bar::-webkit-scrollbar { display: none; }
+  .hero-svc-chip {
+    display: flex; align-items: center; gap: 7px;
+    padding: 9px 20px; border-radius: 40px;
+    white-space: nowrap; flex-shrink: 0; cursor: default;
+    transition: background 0.25s, transform 0.2s;
+  }
+  .hero-svc-chip:hover { background: rgba(201,151,58,0.2); transform: translateY(-1px); }
+  .chip-num {
+    font-size: 9px; font-weight: 700; color: var(--gold);
+    letter-spacing: 1.5px; font-family: 'Inter', sans-serif;
+  }
+  .chip-name {
+    font-size: 14px; font-weight: 600; color: var(--white);
+    font-family: 'DM Sans', sans-serif; letter-spacing: 0.1px;
+  }
+  .chip-sep {
+    color: var(--gold); font-size: 9px; opacity: 0.4;
+    flex-shrink: 0;
+  }
+
+  /* ── FLOATING WA BTN ── */
+  .floating-wa {
+    position: fixed; bottom: 24px; right: 24px; z-index: 900;
+    width: 54px; height: 54px; border-radius: 50%;
+    background: #25D366;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: var(--white);
+    box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+    text-decoration: none;
+    animation: float 3s ease-in-out infinite;
+    transition: transform 0.2s;
+  }
+  .floating-wa:hover { transform: scale(1.1); }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .fade-up {
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 0.75s cubic-bezier(0.22,1,0.36,1),
+                transform 0.75s cubic-bezier(0.22,1,0.36,1),
+                box-shadow 0.65s ease, border-color 0.5s;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* Stagger entrance for product cards */
+  .products-row .product-card.fade-up.visible:nth-child(1) { transition-delay: 0s; }
+  .products-row .product-card.fade-up.visible:nth-child(2) { transition-delay: 0.07s; }
+  .products-row .product-card.fade-up.visible:nth-child(3) { transition-delay: 0.14s; }
+  .products-row .product-card.fade-up.visible:nth-child(4) { transition-delay: 0.21s; }
+  .products-row .product-card.fade-up.visible:nth-child(5) { transition-delay: 0.28s; }
+  .products-row .product-card.fade-up.visible:nth-child(6) { transition-delay: 0.35s; }
+  .products-row .product-card.fade-up.visible:nth-child(7) { transition-delay: 0.42s; }
+
+  /* ── RESPONSIVE ── */
+
+  /* Tablet (≤900px) */
+  @media (max-width: 900px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+
+    /* Hero */
+    .hero { padding: 100px 5% 60px; }
+    .hero-inner { grid-template-columns: 1fr; gap: 32px; }
+    .hero-img-panel { min-height: 260px; }
+    .hero-card { display: none; }
+
+    /* Process */
+    .steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .steps::before { display: none; }
+
+    /* Testimonials */
+    .testi-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* Contact */
+    .lead-inner { grid-template-columns: 1fr; }
+
+    /* Footer */
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 28px; }
+  }
+
+  /* Mobile (≤600px) */
+  @media (max-width: 600px) {
+    section { padding: 52px 5%; }
+
+    /* Nav */
+    .nav-ctas .btn-nav-call { display: none; }
+
+    /* Hero */
+    .hero { padding: 90px 5% 48px; }
+    .hero-pretext { font-size: 13px; }
+    .hero-badge { font-size: 10px; padding: 5px 12px; margin-bottom: 16px; }
+    .hero-service-name { font-size: clamp(26px, 9vw, 44px); }
+    .hero-service-tag { font-size: 13px; }
+    .hero-sub { font-size: 13.5px; margin-bottom: 24px; }
+    .hero-ctas { flex-direction: column; gap: 10px; }
+    .hero-ctas a { width: 100%; justify-content: center; }
+    .hero-trust { gap: 10px; }
+    .hero-img-panel { min-height: 200px; }
+
+    /* Section headings */
+    .section-sub { font-size: 14px; }
+
+    /* Who grid */
+    .who-grid { grid-template-columns: repeat(2,1fr); gap: 12px; }
+    .who-card { padding: 20px 12px; }
+
+    /* Process */
+    .steps { grid-template-columns: 1fr; }
+
+    /* Why */
+    .why-grid { grid-template-columns: 1fr; }
+
+    /* Testimonials */
+    .testi-grid { grid-template-columns: 1fr; }
+
+    /* Contact form */
+    .field-row { grid-template-columns: 1fr; }
+    .form-btns { flex-direction: column; }
+    .lead-feature { gap: 10px; }
+
+    /* Final CTA */
+    .final-cta-btns { flex-direction: column; align-items: stretch; }
+    .final-cta-btns a { justify-content: center; }
+
+    /* Footer */
+    .footer-top { grid-template-columns: 1fr; gap: 28px; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .footer-bottom-links { flex-wrap: wrap; gap: 12px; }
+
+    /* Floating WA — smaller on mobile */
+    .floating-wa { width: 46px; height: 46px; font-size: 20px; bottom: 16px; right: 16px; }
+  }
+
+  /* Small mobile (≤400px) */
+  @media (max-width: 400px) {
+    .hero-ctas a { font-size: 13.5px; padding: 12px 20px; }
+    .product-card { flex: 0 0 86%; }
+    .who-grid { grid-template-columns: repeat(2,1fr); }
+    .btn-primary, .btn-secondary { font-size: 13.5px; padding: 12px 20px; }
+  }
+
+  /* Mobile menu */
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(11,28,61,0.98);
+    backdrop-filter: blur(20px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 28px;
+    transform: translateX(100%); transition: transform 0.3s;
+  }
+  .mobile-menu.open { transform: translateX(0); }
+  .mobile-menu a {
+    color: var(--white); font-size: 20px; font-weight: 600; text-decoration: none;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: var(--gold); }
+  .mobile-close {
+    position: absolute; top: 20px; right: 24px;
+    background: none; border: none; color: var(--white); font-size: 28px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMobile()">✕</button>
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#industries" onclick="closeMobile()">Industries</a>
+  <a href="#why" onclick="closeMobile()">Why VCS</a>
+  <a href="#testimonials" onclick="closeMobile()">Testimonials</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+  <a href="tel:+919999999999" class="btn-nav-call" style="border-radius:8px;padding:12px 24px;background:var(--gold);color:var(--navy);font-weight:700;">📞 Call Now</a>
+  <a href="https://wa.me/919999999999" class="btn-nav-wa" style="border-radius:8px;padding:12px 24px;background:#25D366;color:#fff;font-weight:700;">💬 WhatsApp</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">VCS</div>
+    <div class="nav-logo-text">
+      <span>Vardhman</span>
+      <span>Consultancy Services</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#industries">Industries</a></li>
+    <li><a href="#why">Why VCS</a></li>
+    <li><a href="#testimonials">Testimonials</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-ctas">
+    <a href="tel:+919999999999" class="btn-nav-call">📞 Call Now</a>
+    <a href="https://wa.me/919999999999" class="btn-nav-wa">💬 WhatsApp Expert</a>
+  </div>
+  <div class="hamburger" onclick="openMobile()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        100% Free Initial Consultation
+      </div>
+      <p class="hero-pretext">Aapki financial journey, expertly guided through</p>
+      <h1 class="hero-service-name" id="heroServiceName">Accounting</h1>
+      <p class="hero-service-tag" id="heroServiceTag">Hisaab saaf toh business mazbooth. Har paisa accountable.</p>
+      <p class="hero-sub">Chahe aap salaried ho, business owner ho, ya NRI — VCS ek hi jagah se aapke taxes, loans, investments, insurance aur business ki poori planning karta hai. Bilkul free mein.</p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn-primary">✦ Get Free Consultation</a>
+        <a href="https://wa.me/919999999999" class="btn-secondary" target="_blank">💬 Talk To Expert</a>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-pill"><div class="trust-pill-dot">✓</div>Free Advisory</div>
+        <div class="trust-pill"><div class="trust-pill-dot">✓</div>Personalized Solutions</div>
+        <div class="trust-pill"><div class="trust-pill-dot">✓</div>100% Confidential</div>
+        <div class="trust-pill"><div class="trust-pill-dot">✓</div>End-to-End Support</div>
+      </div>
+    </div>
+    <div class="hero-img-panel">
+      <img class="hero-svc-img active" src="images/img-accounting.png"  alt="Accounting"/>
+      <img class="hero-svc-img"        src="images/img-taxation.png"    alt="Taxation"/>
+      <img class="hero-svc-img"        src="images/img-loan.png"        alt="Loan & Fund Raising"/>
+      <img class="hero-svc-img"        src="images/img-investment.png"  alt="Investment & Wealth Management"/>
+      <img class="hero-svc-img"        src="images/img-insurance.png"   alt="Insurance"/>
+      <img class="hero-svc-img"        src="images/img-advisory.png"    alt="Business Advisory"/>
+      <div class="hero-img-tint"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- SERVICES -->
+<section class="services-bg" id="services">
+  <div class="section-inner">
+    <span class="section-label fade-up">What We Do</span>
+    <h2 class="section-title fade-up">One Advisor. <span class="accent">Every Financial Need.</span></h2>
+    <p class="section-sub fade-up">From startups to HNIs, from ITR filing to global wealth planning — we cover the complete spectrum of financial and business needs.</p>
+    <div class="products-row" id="productsRow">
+
+      <div class="product-card fade-up">
+        <div class="pc-img"><img src="images/img-taxation.png" alt="Taxation"/><div class="pc-img-ph">🧾</div></div>
+        <div class="pc-body">
+          <span class="pc-ghost">01</span>
+          <h3 class="pc-title">Taxation</h3>
+          <p class="pc-tagline">ITR filing se lekar tax planning tak — apna tax bachao, legally aur smartly.</p>
+          <div class="pc-divider"></div>
+          <ul class="pc-list" id="pcl1">
+            <li>Income Tax Returns (ITR)</li>
+            <li>Tax Planning & Optimization</li>
+            <li>Capital Gains Advisory</li>
+            <li>Tax Assessment & Appeals</li>
+            <li>TDS Advisory & Compliance</li>
+          </ul>
+          <div class="pc-footer"><a href="#contact" class="pc-cta">Consult Free →</a></div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="pc-img"><img src="images/img-gst.png" alt="GST & Compliance"/><div class="pc-img-ph">📋</div></div>
+        <div class="pc-body">
+          <span class="pc-ghost">02</span>
+          <h3 class="pc-title">GST & Compliance</h3>
+          <p class="pc-tagline">GST ka jhanjhat? Chhodo fikar. Registration se filing tak — sab hum sambhaalte hain.</p>
+          <div class="pc-divider"></div>
+          <ul class="pc-list" id="pcl2">
+            <li>GST Registration</li>
+            <li>Monthly / Annual GST Filing</li>
+            <li>GST Audits & Reconciliation</li>
+            <li>GST Refund Claims</li>
+            <li>E-Way Bill Management</li>
+          </ul>
+          <div class="pc-footer"><a href="#contact" class="pc-cta">Consult Free →</a></div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="pc-img"><img src="images/img-accounting.png" alt="Accounting & CFO"/><div class="pc-img-ph">📈</div></div>
+        <div class="pc-body">
+          <span class="pc-ghost">03</span>
+          <h3 class="pc-title">Accounting & CFO</h3>
+          <p class="pc-tagline">Hisaab saaf toh neend chain. Virtual CFO bhi available — bina full-time cost ke.</p>
+          <div class="pc-divider"></div>
+          <ul class="pc-list" id="pcl3">
+            <li>Outsourced Accounting</li>
+            <li>Bookkeeping & Reconciliation</li>
+            <li>MIS & Financial Reporting</li>
+            <li>Virtual CFO Services</li>
+            <li>Financial Statements & Audit</li>
+          </ul>
+          <div class="pc-footer"><a href="#contact" class="pc-cta">Consult Free →</a></div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="pc-img"><img src="images/img-loan.png" alt="Loan & Fund Raising"/><div class="pc-img-ph">🏦</div></div>
+        <div class="pc-body">
+          <span class="pc-ghost">04</span>
+          <h3 class="pc-title">Loan & Fund Raising</h3>
+          <p class="pc-tagline">Apna ghar, apna business — sapne bade ho toh fund bhi bada chahiye. Hum dilwate hain.</p>
+          <div class="pc-divider"></div>
+          <ul class="pc-list" id="pcl4">
+            <li>Home & Property Loans</li>
+            <li>Business & SME Loans</li>
+            <li>Working Capital Finance</li>
+            <li>Mortgage & LAP</li>
+            <li>Project Finance Advisory</li>
+          </ul>
+          <div class="pc-footer"><a href="#contact" class="pc-cta">Consult Free →</a></div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="pc-img"><img src="images/img-insurance.png" alt="Insurance"/><div class="pc-img-ph">🛡️</div></div>
+        <div class="pc-body">
+          <span class="pc-ghost">05</span>
+          <h3 class="pc-title">Insurance</h3>
+          <p class="pc-tagline">Kal ka bharosa aaj lelo. Kyunki family ki suraksha se bada koi investment nahi.</p>
+          <div class="pc-divider"></div>
+          <ul class="pc-list" id="pcl5">
+            <li>Health Insurance Planning</li>
+            <li>Life & Term Insurance</li>
+            <li>Corporate Risk Management</li>
+            <li>Claim Assistance & Support</li>
+          </ul>
+          <div class="pc-footer"><a href="#contact" class="pc-cta">Consult Free →</a></div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="pc-img"><img src="images/img-investment.png" alt="Investment & Wealth"/><div class="pc-img-ph">💎</div></div>
+        <div class="pc-body">
+          <span class="pc-ghost">06</span>
+          <h3 class="pc-title">Investment & Wealth</h3>
+          <p class="pc-tagline">Aaj ka paisa, kal ki taaqat. SIP se shuru karo, wealth se khatam karo.</p>
+          <div class="pc-divider"></div>
+          <ul class="pc-list" id="pcl6">
+            <li>Mutual Funds & SIP Planning</li>
+            <li>PMS & AIF</li>
+            <li>Corporate FDs & Debentures</li>
+            <li>Retirement Planning</li>
+            <li>Wealth Preservation Strategies</li>
+          </ul>
+          <div class="pc-footer"><a href="#contact" class="pc-cta">Consult Free →</a></div>
+        </div>
+      </div>
+
+      <div class="product-card fade-up">
+        <div class="pc-img"><img src="images/img-advisory.png" alt="Business Advisory"/><div class="pc-img-ph">🚀</div></div>
+        <div class="pc-body">
+          <span class="pc-ghost">07</span>
+          <h3 class="pc-title">Business Advisory</h3>
+          <p class="pc-tagline">Dukan se corporation tak — growth ka raasta hum dikhate hain, har kadam pe saath.</p>
+          <div class="pc-divider"></div>
+          <ul class="pc-list" id="pcl7">
+            <li>Startup Advisory & Registration</li>
+            <li>Business Structuring</li>
+            <li>Strategic & Expansion Planning</li>
+            <li>Process Improvement</li>
+            <li>Growth Roadmap Development</li>
+          </ul>
+          <div class="pc-footer"><a href="#contact" class="pc-cta">Consult Free →</a></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </div>
+</section>
+
+<!-- WHO WE HELP -->
+<section class="who-bg" id="industries">
+  <div class="section-inner">
+    <span class="section-label fade-up" style="color:var(--gold);">Who We Serve</span>
+    <h2 class="section-title fade-up">Built For Every <span style="color:var(--gold);">Ambition</span></h2>
+    <p class="section-sub fade-up">From first salaries to family offices — our expertise scales to match your goals.</p>
+    <div class="who-grid">
+      <div class="who-card fade-up"><div class="who-emoji">👨‍💼</div><h4>Salaried Professionals</h4></div>
+      <div class="who-card fade-up"><div class="who-emoji">🏢</div><h4>Business Owners</h4></div>
+      <div class="who-card fade-up"><div class="who-emoji">🚀</div><h4>Startups & Founders</h4></div>
+      <div class="who-card fade-up"><div class="who-emoji">👨‍⚕️</div><h4>Professionals & Consultants</h4></div>
+      <div class="who-card fade-up"><div class="who-emoji">👨‍👩‍👧</div><h4>Families</h4></div>
+      <div class="who-card fade-up"><div class="who-emoji">💎</div><h4>High Net Worth Individuals</h4></div>
+      <div class="who-card fade-up"><div class="who-emoji">🌏</div><h4>NRIs</h4></div>
+      <div class="who-card fade-up"><div class="who-emoji">🏭</div><h4>SMEs & MSMEs</h4></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-bg">
+  <div class="section-inner">
+    <span class="section-label fade-up">The Process</span>
+    <h2 class="section-title fade-up">Four Steps to <span class="accent">Clarity</span></h2>
+    <p class="section-sub fade-up">Simple, transparent, and built around your convenience.</p>
+    <div class="steps">
+      <div class="step" id="step1">
+        <div class="step-num">1</div>
+        <h3>Book Free Consultation</h3>
+        <p>Fill the form or WhatsApp us. No pre-payment, no commitment required.</p>
+      </div>
+      <div class="step" id="step2">
+        <div class="step-num">2</div>
+        <h3>Discuss Your Requirement</h3>
+        <p>Our expert understands your financial situation, goals, and challenges — in complete confidence.</p>
+      </div>
+      <div class="step" id="step3">
+        <div class="step-num">3</div>
+        <h3>Receive Customized Strategy</h3>
+        <p>You get a tailored action plan — not generic off-the-shelf advice.</p>
+      </div>
+      <div class="step" id="step4">
+        <div class="step-num">4</div>
+        <h3>Implement With Expert Support</h3>
+        <p>We handle execution, filings, and follow-ups so you can focus on what matters.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY VCS -->
+<section class="why-bg" id="why">
+  <div class="section-inner">
+    <span class="section-label fade-up" style="color:var(--gold);">Our Promise</span>
+    <h2 class="section-title fade-up">Why <span style="color:var(--gold);">Thousands</span> Choose VCS</h2>
+    <p class="section-sub fade-up">We don't just advise. We partner in your financial journey — from planning to implementation.</p>
+    <div class="why-grid">
+      <div class="why-card fade-up">
+        <div class="why-num">01</div>
+        <h3>Free Initial Consultation</h3>
+        <p>Your first expert conversation is completely free. No hidden charges, no obligation to proceed.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-num">02</div>
+        <h3>Personalized, Not Generic</h3>
+        <p>Every client receives solutions built specifically for their income, goals, and risk profile.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-num">03</div>
+        <h3>Multi-Domain Expertise</h3>
+        <p>Tax, compliance, wealth, loans, and business advisory — all under one trusted relationship.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-num">04</div>
+        <h3>Completely Confidential</h3>
+        <p>Your financial data and business plans stay strictly private. Always.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-num">05</div>
+        <h3>End-to-End Execution</h3>
+        <p>We don't just advise and disappear — we stay involved from planning to the final outcome.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-num">06</div>
+        <h3>Long-Term Relationship</h3>
+        <p>We grow as you grow. Your evolving financial needs are met at every stage of life and business.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEAD FORM -->
+<section class="lead-bg" id="contact">
+  <div class="section-inner">
+    <div class="lead-inner">
+      <div class="lead-left fade-up">
+        <span class="section-label">Get In Touch</span>
+        <h2 class="section-title">Expert Guidance,<br><span class="accent">Starting Now</span></h2>
+        <p>Share a few details and our advisory team will reach out within 2 hours to understand your goals and chart a clear path forward.</p>
+        <div class="lead-feature">
+          <div class="lead-icon">🕐</div>
+          <div class="lead-feature-text">
+            <h4>2-Hour Response Guarantee</h4>
+            <p>Our team will contact you within 2 business hours of your request.</p>
+          </div>
+        </div>
+        <div class="lead-feature">
+          <div class="lead-icon">🔒</div>
+          <div class="lead-feature-text">
+            <h4>100% Confidential</h4>
+            <p>All discussions are strictly private. Your information stays with us.</p>
+          </div>
+        </div>
+        <div class="lead-feature">
+          <div class="lead-icon">💰</div>
+          <div class="lead-feature-text">
+            <h4>Zero Consultation Charges</h4>
+            <p>Your initial advisory session is completely free — no strings attached.</p>
+          </div>
+        </div>
+        <div class="lead-feature">
+          <div class="lead-icon">🌐</div>
+          <div class="lead-feature-text">
+            <h4>Remote Support Available</h4>
+            <p>We serve clients across India and internationally via video, phone, and chat.</p>
+          </div>
+        </div>
+      </div>
+      <div class="lead-form-card fade-up">
+        <h3>Book Your Free Consultation</h3>
+        <p>No fees. No commitments. Just expert guidance.</p>
+        <div class="field-row">
+          <input class="field-light" placeholder="Full Name" type="text" id="lf-name"/>
+          <input class="field-light" placeholder="Mobile Number" type="tel" id="lf-phone"/>
+        </div>
+        <input class="field-light" placeholder="Email Address" type="email" id="lf-email" style="width:100%;"/>
+        <div class="field-row">
+          <input class="field-light" placeholder="City" type="text" id="lf-city"/>
+          <select class="field-light" id="lf-service">
+            <option value="" disabled selected>Service Required</option>
+            <option>Taxation & ITR</option>
+            <option>GST & Compliance</option>
+            <option>Business Loans / Finance</option>
+            <option>Investments & Wealth</option>
+            <option>Insurance Advisory</option>
+            <option>Business Advisory</option>
+            <option>Virtual CFO</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <textarea class="field-light" placeholder="Your message or specific requirement (optional)" rows="3" style="resize:vertical;width:100%;" id="lf-message"></textarea>
+        <p id="lf-status" style="min-height:16px;font-size:12px;margin:6px 0 0;"></p>
+        <div class="form-btns">
+          <button class="btn-callback" onclick="submitLeadForm(event)">📞 Request Callback</button>
+          <a href="https://wa.me/919999999999" class="btn-wa" target="_blank">
+            <span>💬</span> WhatsApp Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-bg" id="testimonials">
+  <div class="section-inner">
+    <span class="section-label fade-up" style="color:var(--gold);">Client Stories</span>
+    <h2 class="section-title fade-up">Trusted by Businesses <span style="color:var(--gold);">& Families</span></h2>
+    <p class="section-sub fade-up">Real outcomes from real people who chose expert guidance.</p>
+    <div class="testi-grid">
+      <div class="testi-card fade-up">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"VCS saved us lakhs in taxes through proper structuring. Their GST support during our expansion was invaluable. Truly a one-stop solution."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">R</div>
+          <div>
+            <div class="testi-name">Rajesh Mehta</div>
+            <div class="testi-meta">Manufacturing Business · Mumbai · Taxation & GST</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card fade-up">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"As an NRI, managing Indian investments and tax filings was always stressful. VCS made it completely seamless with clear, personalized guidance."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">P</div>
+          <div>
+            <div class="testi-name">Priya Nair</div>
+            <div class="testi-meta">NRI Professional · Dubai · Investment & Tax Advisory</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card fade-up">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"Got our startup's business loan and full accounting setup done through VCS. Their Virtual CFO service is a game-changer for early-stage companies."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
+          <div>
+            <div class="testi-name">Arjun Kapoor</div>
+            <div class="testi-meta">Tech Startup Founder · Bengaluru · Business Advisory & Loans</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card fade-up">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"VCS helped me build a retirement corpus strategy while also optimizing my home loan. Their holistic view of personal finance is rare and refreshing."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">S</div>
+          <div>
+            <div class="testi-name">Sunita Sharma</div>
+            <div class="testi-meta">Senior Manager · Delhi NCR · Wealth & Loan Advisory</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card fade-up">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"From GST registration to monthly filings to annual audit — VCS handles everything. I can now focus entirely on growing my business."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">V</div>
+          <div>
+            <div class="testi-name">Vikram Patel</div>
+            <div class="testi-meta">Retail Chain Owner · Ahmedabad · GST & Compliance</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card fade-up">
+        <div class="stars">★★★★★</div>
+        <p class="testi-text">"The free consultation was incredibly detailed. They didn't just give generic advice — they understood my specific situation and gave a real plan."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">M</div>
+          <div>
+            <div class="testi-name">Dr. Meera Joshi</div>
+            <div class="testi-meta">Medical Professional · Pune · Insurance & Investment Planning</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-bg">
+  <div class="section-inner">
+    <span class="section-label fade-up">Common Questions</span>
+    <h2 class="section-title fade-up">Things People Ask <span class="accent">Before They Start</span></h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is the initial consultation really free?</div>
+        <div class="faq-a">Yes, completely. Your first discussion with our advisor covers your situation, goals, and options — at no charge and with no obligation to proceed further. There are no hidden fees in this stage.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How quickly will someone get back to me?</div>
+        <div class="faq-a">We guarantee a response within 2 business hours of receiving your request. For urgent matters, WhatsApp is the fastest way to reach our team directly.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Do you help with both personal and business finance?</div>
+        <div class="faq-a">Absolutely. VCS serves individuals (salaried, professionals, HNIs, NRIs) and businesses (startups, SMEs, established companies) across all financial domains — from personal ITR filing to full-scale business advisory and funding.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is my financial information kept confidential?</div>
+        <div class="faq-a">Without exception. We treat all client data and discussions with strict confidentiality. Your financial details are never shared with third parties without your explicit consent.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I get assistance if I'm not in the same city?</div>
+        <div class="faq-a">Yes. We serve clients pan-India and internationally through video calls, phone consultations, email, and WhatsApp. Distance is not a barrier to receiving expert guidance from VCS.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What makes VCS different from other financial advisors?</div>
+        <div class="faq-a">Most advisors specialize in one area. VCS provides integrated expertise across taxation, compliance, investments, loans, insurance, and business advisory — enabling holistic financial planning from a single trusted partner, not a patchwork of specialists.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<div class="final-cta">
+  <div class="final-cta-inner fade-up">
+    <h2>Let's Build Your Financial Future Together</h2>
+    <p>Expert advice. Personalized solutions. Zero consultation fees. Start today.</p>
+    <div class="final-cta-btns">
+      <a href="tel:+919999999999" class="btn-white">📞 Call Now</a>
+      <a href="#contact" class="btn-outline-white">✦ Book Free Consultation</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" style="display:inline-flex;margin-bottom:4px;">
+          <div class="nav-logo-mark">VCS</div>
+          <div class="nav-logo-text">
+            <span>Vardhman</span>
+            <span>Consultancy Services</span>
+          </div>
+        </a>
+        <p>Your trusted financial and business advisory partner. Taxation · Compliance · Finance · Investments · Wealth Management · Business Advisory.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn" title="LinkedIn">in</a>
+          <a href="#" class="social-btn" title="Twitter">X</a>
+          <a href="https://wa.me/919999999999" class="social-btn" title="WhatsApp">💬</a>
+          <a href="#" class="social-btn" title="YouTube">▶</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a href="#services">Taxation & ITR</a>
+        <a href="#services">GST & Compliance</a>
+        <a href="#services">Accounting & CFO</a>
+        <a href="#services">Loans & Finance</a>
+        <a href="#services">Insurance</a>
+        <a href="#services">Investments</a>
+        <a href="#services">Business Advisory</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#why">Why VCS</a>
+        <a href="#industries">Who We Serve</a>
+        <a href="#testimonials">Client Stories</a>
+        <a href="#contact">Contact Us</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="tel:+919999999999">📞 +91-99999-99999</a>
+        <a href="https://wa.me/919999999999" target="_blank">💬 WhatsApp Us</a>
+        <a href="mailto:info@vardhmancs.com">✉ info@vardhmancs.com</a>
+        <a href="#">📍 India (Pan-India & NRI)</a>
+      </div>
+    </div>
+    <hr class="footer-divider"/>
+    <div class="footer-bottom">
+      <p>© 2025 Vardhman Consultancy Services. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms</a>
+        <a href="#">Disclaimer</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating WA -->
+<a href="https://wa.me/919999999999" class="floating-wa" target="_blank" title="Chat on WhatsApp">💬</a>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// Hero service animation
+const heroServices = [
+  { name: 'Accounting',                    tag: 'Hisaab saaf toh business mazbooth. Har paisa accountable.',           icon: '📊' },
+  { name: 'Taxation',                      tag: 'ITR filed. Tax bachaya. Tension khatam. 100% legally.',               icon: '🧾' },
+  { name: 'Loan & Fund Raising',           tag: 'Apna ghar, apna business — sapne ko fund karein hum.',               icon: '🏦' },
+  { name: 'Investment & Wealth Management',tag: 'Aaj ka paisa, kal ki taaqat. SIP se shuru, wealth se khatam.',       icon: '💎' },
+  { name: 'Insurance',                     tag: 'Kal ka bharosa aaj lelo. Kyunki family sab se pehle.',               icon: '🛡️' },
+  { name: 'Business Advisory',             tag: 'Dukan se corporation tak — har kadam pe hum aapke saath.',           icon: '🚀' }
+];
+let hIdx = 0;
+const hName    = document.getElementById('heroServiceName');
+const hTag     = document.getElementById('heroServiceTag');
+const heroImgs = document.querySelectorAll('.hero-svc-img');
+
+setInterval(() => {
+  [hName, hTag].forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(-14px)'; });
+  setTimeout(() => {
+    hIdx = (hIdx + 1) % heroServices.length;
+    const s = heroServices[hIdx];
+    hName.textContent = s.name;
+    hTag.textContent  = s.tag;
+    heroImgs.forEach((img, i) => img.classList.toggle('active', i === hIdx));
+    [hName, hTag].forEach(el => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
+  }, 420);
+}, 3200);
+
+// Mobile carousel — dots, swipe, auto-slide
+(function() {
+  const row  = document.getElementById('productsRow');
+  const wrap = document.getElementById('carouselDots');
+  if (!row || !wrap) return;
+  if (!window.matchMedia('(max-width: 768px)').matches) return;
+
+  const cards = Array.from(row.querySelectorAll('.product-card'));
+  let cur = 0, timer, userInteracting = false;
+
+  // Build dots
+  cards.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'c-dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => { goTo(i); resetTimer(); });
+    wrap.appendChild(d);
+  });
+
+  const dots = () => wrap.querySelectorAll('.c-dot');
+
+  function goTo(i) {
+    cur = (i + cards.length) % cards.length;
+    // Use scrollTo on the row itself — avoids scrollIntoView moving the whole page
+    const pl = parseFloat(getComputedStyle(row).paddingLeft) || 0;
+    row.scrollTo({ left: cards[cur].offsetLeft - pl, behavior: 'smooth' });
+    dots().forEach((d, j) => d.classList.toggle('active', j === cur));
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => { if (!userInteracting) goTo(cur + 1); }, 3800);
+  }
+
+  // Sync dots when user manually scrolls
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const i = cards.indexOf(e.target);
+        if (i !== -1) { cur = i; dots().forEach((d, j) => d.classList.toggle('active', j === i)); }
+      }
+    });
+  }, { root: row, threshold: 0.6 });
+  cards.forEach(c => io.observe(c));
+
+  // Touch: pause auto-slide while swiping
+  let tx = 0;
+  row.addEventListener('touchstart', e => {
+    tx = e.touches[0].clientX;
+    userInteracting = true;
+    clearInterval(timer);
+  }, { passive: true });
+  row.addEventListener('touchend', e => {
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) goTo(cur + (dx > 0 ? 1 : -1));
+    userInteracting = false;
+    resetTimer();
+  });
+
+  resetTimer();
+})();
+
+// Mobile tap-to-expand service list (touch devices — no hover available)
+if (window.matchMedia('(hover: none)').matches) {
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const list = card.querySelector('.pc-list');
+      if (!list) return;
+      const isOpen = list.classList.contains('open');
+      document.querySelectorAll('.pc-list.open').forEach(l => l.classList.remove('open'));
+      if (!isOpen) list.classList.add('open');
+    });
+  });
+}
+
+// Scroll animations
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-up, .step').forEach(el => obs.observe(el));
+
+// FAQ
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
+
+// Mobile menu
+function openMobile() { document.getElementById('mobileMenu').classList.add('open'); }
+function closeMobile() { document.getElementById('mobileMenu').classList.remove('open'); }
+
+// Form submissions
+function submitQuickForm(e) {
+  e.preventDefault();
+  const btn = e.target;
+  btn.textContent = '✓ We\'ll Call You Soon!';
+  btn.style.background = 'var(--emerald)';
+  setTimeout(() => { btn.textContent = 'Request Free Callback →'; btn.style.background = ''; }, 3000);
+}
+// TODO: replace with your Supabase project's URL and anon/public key
+// (Project Settings -> API in the Supabase dashboard). Never put the
+// service_role key here — only the anon key is safe for client-side use.
+const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function submitLeadForm(e) {
+  e.preventDefault();
+  const btn = e.target;
+  const statusEl = document.getElementById('lf-status');
+  const orig = btn.textContent;
+
+  const name = document.getElementById('lf-name').value.trim();
+  const phone = document.getElementById('lf-phone').value.trim();
+  const email = document.getElementById('lf-email').value.trim();
+  const city = document.getElementById('lf-city').value.trim();
+  const service = document.getElementById('lf-service').value;
+  const message = document.getElementById('lf-message').value.trim();
+
+  if (!name || !phone) {
+    statusEl.textContent = 'Please enter at least your name and mobile number.';
+    statusEl.style.color = '#e0554f';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  statusEl.textContent = '';
+
+  const { error } = await supabaseClient.from('leads').insert([{
+    name, phone, email, city, service, message
+  }]);
+
+  btn.disabled = false;
+
+  if (error) {
+    console.error(error);
+    btn.textContent = orig;
+    statusEl.textContent = 'Something went wrong. Please try WhatsApp instead.';
+    statusEl.style.color = '#e0554f';
+    return;
+  }
+
+  btn.textContent = '✓ Request Received!';
+  btn.style.background = '#0E8A5A';
+  statusEl.textContent = "Thanks! We'll call you within 2 hours.";
+  statusEl.style.color = '#0E8A5A';
+  document.getElementById('lf-name').value = '';
+  document.getElementById('lf-phone').value = '';
+  document.getElementById('lf-email').value = '';
+  document.getElementById('lf-city').value = '';
+  document.getElementById('lf-service').value = '';
+  document.getElementById('lf-message').value = '';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 3000);
+}
+
+// Smooth nav highlight on scroll
+const sections = document.querySelectorAll('section[id], div[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let cur = '';
+  sections.forEach(s => { if(window.scrollY >= s.offsetTop - 100) cur = s.id; });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#'+cur ? 'var(--gold)' : '';
+  });
+});
+</script>
+</body>
+</html>
+
