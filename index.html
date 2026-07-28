@@ -1642,13 +1642,18 @@ async function submitLeadForm(e) {
     return;
   }
 
-  btn.disabled = true;
+btn.disabled = true;
   btn.textContent = 'Sending...';
   statusEl.textContent = '';
 
-  const { error } = await supabaseClient.from('leads').insert([{
-    name, phone, email, city, service, message
-  }]);
+  let error;
+  try {
+    ({ error } = await supabaseClient.from('leads').insert([{
+      name, phone, email, city, service, message
+    }]));
+  } catch (err) {
+    error = err;
+  }
 
   btn.disabled = false;
 
