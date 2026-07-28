@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Insights & Articles | Vardhman Consultancy Services</title>
+<meta name="description" content="Finance, tax, GST, loans, investment and business advisory articles from Vardhman Consultancy Services."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #0B1C3D;
+    --navy-light: #132850;
+    --emerald: #0E8A5A;
+    --gold: #C9973A;
+    --gold-light: #E5B55A;
+    --white: #FFFFFF;
+    --bg: #F5F7FA;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',sans-serif; color:var(--navy); background:var(--bg); }
+  a { text-decoration:none; color:inherit; }
+  nav {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 40px; background:var(--navy); position:sticky; top:0; z-index:100;
+  }
+  .nav-logo { display:flex; align-items:center; gap:10px; }
+  .nav-logo-mark {
+    width:40px; height:40px; border-radius:8px;
+    background:linear-gradient(135deg, var(--gold), var(--gold-light));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Playfair Display',serif; font-weight:700; color:var(--navy); font-size:16px;
+  }
+  .nav-logo-text { display:flex; flex-direction:column; }
+  .nav-logo-text span:first-child { font-family:'Playfair Display',serif; font-size:15px; font-weight:600; color:var(--white); line-height:1.1; }
+  .nav-logo-text span:last-child { font-size:9px; font-weight:500; color:var(--gold); letter-spacing:1.5px; text-transform:uppercase; }
+  .nav-links { list-style:none; display:flex; gap:28px; }
+  .nav-links a { color:rgba(255,255,255,0.75); font-size:14px; font-weight:500; }
+  .nav-links a:hover, .nav-links a.active { color:var(--gold); }
+  .nav-cta { background:var(--gold); color:var(--navy); font-weight:700; padding:10px 20px; border-radius:8px; font-size:14px; }
+  @media (max-width:800px){ .nav-links{ display:none; } }
+
+  .hero { background:var(--navy); padding:60px 24px 50px; text-align:center; }
+  .hero span { color:var(--gold); font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; }
+  .hero h1 { font-family:'Playfair Display',serif; color:var(--white); font-size:clamp(28px,4vw,44px); margin-top:12px; }
+  .hero p { color:rgba(255,255,255,0.6); margin-top:12px; max-width:560px; margin-left:auto; margin-right:auto; font-size:15px; }
+
+  .wrap { max-width:1100px; margin:0 auto; padding:50px 24px 90px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:28px; }
+  .card {
+    background:var(--white); border-radius:14px; overflow:hidden;
+    box-shadow:0 6px 24px rgba(11,28,61,0.08); transition:transform .25s, box-shadow .25s;
+    display:flex; flex-direction:column;
+  }
+  .card:hover { transform:translateY(-4px); box-shadow:0 14px 34px rgba(11,28,61,0.14); }
+  .card img { width:100%; height:190px; object-fit:cover; background:#e2e6ec; }
+  .card-body { padding:20px 22px 24px; display:flex; flex-direction:column; flex:1; }
+  .card-tag { color:var(--emerald); font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; }
+  .card h3 { font-family:'Playfair Display',serif; font-size:19px; line-height:1.3; margin-bottom:10px; }
+  .card p { color:#5A6578; font-size:14px; line-height:1.6; flex:1; }
+  .card-foot { margin-top:16px; display:flex; justify-content:space-between; align-items:center; }
+  .read-more { color:var(--emerald); font-weight:600; font-size:13px; }
+  .card-date { color:#9AA4B4; font-size:12px; }
+
+  .empty, .loading { text-align:center; padding:60px 20px; color:#7A8496; }
+  footer { background:var(--navy); color:rgba(255,255,255,0.5); text-align:center; padding:28px; font-size:13px; }
+  footer a { color:var(--gold); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-mark">VCS</div>
+    <div class="nav-logo-text">
+      <span>Vardhman</span>
+      <span>Consultancy Services</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="index.html#industries">Industries</a></li>
+    <li><a href="index.html#why">Why VCS</a></li>
+    <li><a href="blogs.html" class="active">Insights</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+  <a href="index.html#contact" class="nav-cta">Get Free Consultation</a>
+</nav>
+
+<section class="hero">
+  <span>Insights & Articles</span>
+  <h1>Finance & Compliance, Explained Simply</h1>
+  <p>Practical guides on taxation, GST, loans, investments, insurance and business advisory — updated regularly.</p>
+</section>
+
+<div class="wrap">
+  <div id="blogGrid" class="grid"></div>
+  <div id="loadingMsg" class="loading">Loading articles...</div>
+  <div id="emptyMsg" class="empty" style="display:none;">No articles published yet — check back soon.</div>
+</div>
+
+<footer>
+  &copy; <span id="year"></span> Vardhman Consultancy Services. All rights reserved.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Same Supabase project as index.html — keep these two values in sync.
+const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+}
+
+async function loadBlogs() {
+  const grid = document.getElementById('blogGrid');
+  const loadingMsg = document.getElementById('loadingMsg');
+  const emptyMsg = document.getElementById('emptyMsg');
+
+  let data, error;
+  try {
+    ({ data, error } = await supabaseClient
+      .from('blogs')
+      .select('slug,title,excerpt,image_url,created_at')
+      .eq('published', true)
+      .order('created_at', { ascending: false }));
+  } catch (err) {
+    error = err;
+  }
+
+  loadingMsg.style.display = 'none';
+
+  if (error) {
+    console.error(error);
+    emptyMsg.textContent = 'Could not load articles right now. Please try again later.';
+    emptyMsg.style.display = 'block';
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    emptyMsg.style.display = 'block';
+    return;
+  }
+
+  grid.innerHTML = data.map(post => `
+    <a class="card" href="blog.html?slug=${encodeURIComponent(post.slug)}">
+      <img src="${escapeHtml(post.image_url) || 'images/img-advisory.png'}" alt="${escapeHtml(post.title)}" loading="lazy"/>
+      <div class="card-body">
+        <div class="card-tag">Finance & Advisory</div>
+        <h3>${escapeHtml(post.title)}</h3>
+        <p>${escapeHtml(post.excerpt)}</p>
+        <div class="card-foot">
+          <span class="read-more">Read Article &rarr;</span>
+          <span class="card-date">${formatDate(post.created_at)}</span>
+        </div>
+      </div>
+    </a>
+  `).join('');
+}
+
+loadBlogs();
+</script>
+</body>
+</html>

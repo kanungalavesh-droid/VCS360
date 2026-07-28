@@ -935,6 +935,7 @@
   <a href="#industries" onclick="closeMobile()">Industries</a>
   <a href="#why" onclick="closeMobile()">Why VCS</a>
   <a href="#testimonials" onclick="closeMobile()">Testimonials</a>
+  <a href="blogs.html" onclick="closeMobile()">Insights</a>
   <a href="#contact" onclick="closeMobile()">Contact</a>
   <a href="tel:+919999999999" class="btn-nav-call" style="border-radius:8px;padding:12px 24px;background:var(--gold);color:var(--navy);font-weight:700;">📞 Call Now</a>
   <a href="https://wa.me/919999999999" class="btn-nav-wa" style="border-radius:8px;padding:12px 24px;background:#25D366;color:#fff;font-weight:700;">💬 WhatsApp</a>
@@ -954,6 +955,7 @@
     <li><a href="#industries">Industries</a></li>
     <li><a href="#why">Why VCS</a></li>
     <li><a href="#testimonials">Testimonials</a></li>
+    <li><a href="blogs.html">Insights</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="nav-ctas">
@@ -1646,9 +1648,14 @@ async function submitLeadForm(e) {
   btn.textContent = 'Sending...';
   statusEl.textContent = '';
 
-  const { error } = await supabaseClient.from('leads').insert([{
-    name, phone, email, city, service, message
-  }]);
+  let error;
+  try {
+    ({ error } = await supabaseClient.from('leads').insert([{
+      name, phone, email, city, service, message
+    }]));
+  } catch (err) {
+    error = err;
+  }
 
   btn.disabled = false;
 
