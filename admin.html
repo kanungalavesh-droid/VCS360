@@ -28,7 +28,6 @@
   #loginScreen { max-width:380px; margin:80px auto; background:var(--white); padding:36px 32px; border-radius:14px; box-shadow:0 8px 30px rgba(11,28,61,0.1); }
   #loginScreen h2 { font-family:'Playfair Display',serif; margin-bottom:6px; }
   #loginScreen p { color:#7A8496; font-size:13px; margin-bottom:22px; }
-  #loginScreen input { width:100%; padding:12px 14px; border:1px solid #DCE1EA; border-radius:8px; margin-bottom:12px; font-size:14px; }
   #loginScreen button { width:100%; padding:12px; background:var(--emerald); color:var(--white); border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:14px; }
   #loginError { color:var(--red); font-size:13px; margin-top:10px; min-height:18px; }
 
@@ -68,11 +67,8 @@
 
 <div id="loginScreen">
   <h2>Admin Login</h2>
-  <p>Sign in with your admin account to manage blog posts.</p>
-  <input type="email" id="loginEmail" placeholder="Email"/>
-  <input type="password" id="loginPassword" placeholder="Password"/>
-  <button onclick="login()">Log In</button>
-  <button onclick="loginWithGoogle()" style="margin-top:10px;background:#fff;color:var(--navy);border:1px solid #DCE1EA;">Sign in with Google</button>
+  <p>Sign in with your Google account to manage blog posts.</p>
+  <button onclick="loginWithGoogle()">Sign in with Google</button>
   <div id="loginError"></div>
 </div>
 
@@ -136,21 +132,6 @@ function checkSession() {
       document.getElementById('logoutBtn').style.display = 'none';
     }
   });
-}
-
-async function login() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  const errEl = document.getElementById('loginError');
-  errEl.textContent = '';
-
-  try {
-    await auth.signInWithEmailAndPassword(email, password);
-  } catch (err) {
-    errEl.textContent = 'Login failed: ' + err.message;
-    return;
-  }
-  showAdmin();
 }
 
 async function loginWithGoogle() {
