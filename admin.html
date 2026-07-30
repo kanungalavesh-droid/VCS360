@@ -68,10 +68,11 @@
 
 <div id="loginScreen">
   <h2>Admin Login</h2>
-  <p>Sign in with your Supabase admin account to manage blog posts.</p>
+  <p>Sign in with your admin account to manage blog posts.</p>
   <input type="email" id="loginEmail" placeholder="Email"/>
   <input type="password" id="loginPassword" placeholder="Password"/>
   <button onclick="login()">Log In</button>
+  <button onclick="loginWithGoogle()" style="margin-top:10px;background:#fff;color:var(--navy);border:1px solid #DCE1EA;">Sign in with Google</button>
   <div id="loginError"></div>
 </div>
 
@@ -147,6 +148,18 @@ async function login() {
     await auth.signInWithEmailAndPassword(email, password);
   } catch (err) {
     errEl.textContent = 'Login failed: ' + err.message;
+    return;
+  }
+  showAdmin();
+}
+
+async function loginWithGoogle() {
+  const errEl = document.getElementById('loginError');
+  errEl.textContent = '';
+  try {
+    await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  } catch (err) {
+    errEl.textContent = 'Google sign-in failed: ' + err.message;
     return;
   }
   showAdmin();
