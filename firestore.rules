@@ -3,6 +3,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // Only these signed-in emails count as admin, even if another Firebase
+    // Auth account somehow exists — a valid session alone isn't enough.
+    function isAdminEmail() {
+      return request.auth != null &&
+        request.auth.token.email in [
+          'kanunga.lavesh@gmail.com'
+        ];
+    }
+
     // Public lead form: anyone can submit a lead, nobody can read/edit/delete
     // them from the client. View leads via the Firebase console instead.
     match /leads/{leadId} {
@@ -15,12 +24,12 @@ service cloud.firestore {
     }
 
     // Blog posts: public can read published posts only. Full read/write
-    // access requires being signed in (the single admin account used by
-    // admin.html). The automated generator script uses the Admin SDK with a
-    // service account, which bypasses these rules entirely.
+    // access requires being one of the whitelisted admin emails above.
+    // The automated generator script uses the Admin SDK with a service
+    // account, which bypasses these rules entirely.
     match /blogs/{blogId} {
-      allow read: if resource.data.published == true || request.auth != null;
-      allow create, update, delete: if request.auth != null;
+      allow read: if resource.data.published == true || isAdminEmail();
+      allow create, update, delete: if isAdminEmail();
     }
   }
 }
