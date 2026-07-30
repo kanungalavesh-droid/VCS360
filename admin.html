@@ -106,24 +106,35 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script>
-// Same Supabase project as index.html — keep these two values in sync.
-const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Same Firebase project as index.html — keep this config in sync.
+const firebaseConfig = {
+  apiKey: 'AIzaSyCZGJ_88fdjo88tNQU-A0mY1EYEFrX7HRg',
+  authDomain: 'vcs360-website.firebaseapp.com',
+  projectId: 'vcs360-website',
+  storageBucket: 'vcs360-website.firebasestorage.app',
+  messagingSenderId: '1052537853049',
+  appId: '1:1052537853049:web:a6ddbc006106968d6370a8',
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
 
 let editingId = null;
 
-async function checkSession() {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) {
-    showAdmin();
-  } else {
-    document.getElementById('loginScreen').style.display = 'block';
-    document.getElementById('adminScreen').style.display = 'none';
-    document.getElementById('logoutBtn').style.display = 'none';
-  }
+function checkSession() {
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      showAdmin();
+    } else {
+      document.getElementById('loginScreen').style.display = 'block';
+      document.getElementById('adminScreen').style.display = 'none';
+      document.getElementById('logoutBtn').style.display = 'none';
+    }
+  });
 }
 
 async function login() {
@@ -132,16 +143,17 @@ async function login() {
   const errEl = document.getElementById('loginError');
   errEl.textContent = '';
 
-  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  if (error) {
-    errEl.textContent = 'Login failed: ' + error.message;
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (err) {
+    errEl.textContent = 'Login failed: ' + err.message;
     return;
   }
   showAdmin();
 }
 
 async function logout() {
-  await supabaseClient.auth.signOut();
+  await auth.signOut();
   location.reload();
 }
 
@@ -165,25 +177,23 @@ function formatDate(iso) {
 let allPosts = [];
 
 async function loadPosts() {
-  const { data, error } = await supabaseClient
-    .from('blogs')
-    .select('*')
-    .order('created_at', { ascending: false });
-
   const body = document.getElementById('postsBody');
   const countMsg = document.getElementById('countMsg');
 
-  if (error) {
-    console.error(error);
+  let snapshot;
+  try {
+    snapshot = await db.collection('blogs').orderBy('createdAt', 'desc').get();
+  } catch (err) {
+    console.error(err);
     countMsg.textContent = 'Could not load posts.';
     return;
   }
 
-  allPosts = data || [];
+  allPosts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
   countMsg.textContent = allPosts.length + ' post(s)';
 
   if (allPosts.length === 0) {
-    body.innerHTML = '<tr><td colspan="5" class="empty">No blog posts yet. They will appear here once the automated workflow generates one, or you can add posts directly in Supabase.</td></tr>';
+    body.innerHTML = '<tr><td colspan="5" class="empty">No blog posts yet. They will appear here once the automated workflow generates one, or you can add posts directly in Firestore.</td></tr>';
     return;
   }
 
@@ -191,7 +201,7 @@ async function loadPosts() {
     <tr>
       <td class="title-cell">${escapeHtml(p.title)}</td>
       <td>${escapeHtml(p.keyword) || '-'}</td>
-      <td>${formatDate(p.created_at)}</td>
+      <td>${p.createdAt ? formatDate(p.createdAt.toDate()) : ''}</td>
       <td><span class="status-pill ${p.published ? 'pub' : 'draft'}">${p.published ? 'Published' : 'Draft'}</span></td>
       <td>
         <div class="row-actions">
@@ -211,7 +221,7 @@ function openEdit(id) {
   document.getElementById('editTitle').value = post.title || '';
   document.getElementById('editExcerpt').value = post.excerpt || '';
   document.getElementById('editContent').value = post.content || '';
-  document.getElementById('editImageUrl').value = post.image_url || '';
+  document.getElementById('editImageUrl').value = post.imageUrl || '';
   document.getElementById('editPublished').checked = !!post.published;
   document.getElementById('editModalBg').style.display = 'flex';
 }
@@ -223,16 +233,16 @@ function closeModal() {
 
 async function saveEdit() {
   if (!editingId) return;
-  const { error } = await supabaseClient.from('blogs').update({
-    title: document.getElementById('editTitle').value.trim(),
-    excerpt: document.getElementById('editExcerpt').value.trim(),
-    content: document.getElementById('editContent').value,
-    image_url: document.getElementById('editImageUrl').value.trim(),
-    published: document.getElementById('editPublished').checked
-  }).eq('id', editingId);
-
-  if (error) {
-    alert('Save failed: ' + error.message);
+  try {
+    await db.collection('blogs').doc(editingId).update({
+      title: document.getElementById('editTitle').value.trim(),
+      excerpt: document.getElementById('editExcerpt').value.trim(),
+      content: document.getElementById('editContent').value,
+      imageUrl: document.getElementById('editImageUrl').value.trim(),
+      published: document.getElementById('editPublished').checked,
+    });
+  } catch (err) {
+    alert('Save failed: ' + err.message);
     return;
   }
   closeModal();
@@ -240,15 +250,23 @@ async function saveEdit() {
 }
 
 async function togglePublish(id, currentlyPublished) {
-  const { error } = await supabaseClient.from('blogs').update({ published: !currentlyPublished }).eq('id', id);
-  if (error) { alert('Update failed: ' + error.message); return; }
+  try {
+    await db.collection('blogs').doc(id).update({ published: !currentlyPublished });
+  } catch (err) {
+    alert('Update failed: ' + err.message);
+    return;
+  }
   loadPosts();
 }
 
 async function deletePost(id) {
   if (!confirm('Delete this post permanently?')) return;
-  const { error } = await supabaseClient.from('blogs').delete().eq('id', id);
-  if (error) { alert('Delete failed: ' + error.message); return; }
+  try {
+    await db.collection('blogs').doc(id).delete();
+  } catch (err) {
+    alert('Delete failed: ' + err.message);
+    return;
+  }
   loadPosts();
 }
 

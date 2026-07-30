@@ -1490,7 +1490,8 @@
 <!-- Floating WA -->
 <a href="https://wa.me/919999999999" class="floating-wa" target="_blank" title="Chat on WhatsApp">💬</a>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 // Hero service animation
 const heroServices = [
@@ -1618,12 +1619,20 @@ function submitQuickForm(e) {
   btn.style.background = 'var(--emerald)';
   setTimeout(() => { btn.textContent = 'Request Free Callback →'; btn.style.background = ''; }, 3000);
 }
-// TODO: replace with your Supabase project's URL and anon/public key
-// (Project Settings -> API in the Supabase dashboard). Never put the
-// service_role key here — only the anon key is safe for client-side use.
-const SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// TODO: replace with your Firebase project's web config
+// (Project Settings -> General -> Your apps -> Web app, in the Firebase console).
+// This config is safe to expose client-side — access is controlled by
+// Firestore Security Rules (see firestore.rules), not by hiding this object.
+const firebaseConfig = {
+  apiKey: 'AIzaSyCZGJ_88fdjo88tNQU-A0mY1EYEFrX7HRg',
+  authDomain: 'vcs360-website.firebaseapp.com',
+  projectId: 'vcs360-website',
+  storageBucket: 'vcs360-website.firebasestorage.app',
+  messagingSenderId: '1052537853049',
+  appId: '1:1052537853049:web:a6ddbc006106968d6370a8',
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 async function submitLeadForm(e) {
   e.preventDefault();
@@ -1650,9 +1659,10 @@ async function submitLeadForm(e) {
 
   let error;
   try {
-    ({ error } = await supabaseClient.from('leads').insert([{
-      name, phone, email, city, service, message
-    }]));
+    await db.collection('leads').add({
+      name, phone, email, city, service, message,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
   } catch (err) {
     error = err;
   }

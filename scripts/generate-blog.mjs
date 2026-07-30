@@ -1,21 +1,26 @@
 // Automated blog generator: pulls a real trending finance headline from RSS,
 // asks Gemini to write a post about it, fetches a matching Unsplash photo,
-// and inserts the result into the Supabase `blogs` table.
-// Runs in GitHub Actions (see .github/workflows/generate-blog.yml) — no npm
-// dependencies required, uses Node's built-in fetch (Node 20+).
+// and inserts the result into the Firestore `blogs` collection.
+// Runs in GitHub Actions (see .github/workflows/generate-blog.yml).
+
+import admin from 'firebase-admin';
 
 const {
   GEMINI_API_KEY,
   GEMINI_MODEL = 'gemini-2.5-flash',
   UNSPLASH_ACCESS_KEY,
-  SUPABASE_URL,
-  SUPABASE_SERVICE_ROLE_KEY,
+  FIREBASE_SERVICE_ACCOUNT,
 } = process.env;
 
-if (!GEMINI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.error('Missing required environment variables (GEMINI_API_KEY, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY).');
+if (!GEMINI_API_KEY || !FIREBASE_SERVICE_ACCOUNT) {
+  console.error('Missing required environment variables (GEMINI_API_KEY, FIREBASE_SERVICE_ACCOUNT).');
   process.exit(1);
 }
+
+admin.initializeApp({
+  credential: admin.credential.cert(JSON.parse(FIREBASE_SERVICE_ACCOUNT)),
+});
+const db = admin.firestore();
 
 const RSS_FEEDS = [
   'https://www.moneycontrol.com/rss/business.xml',
@@ -152,44 +157,24 @@ async function fetchUnsplashImage(query) {
 }
 
 async function insertBlog(post, image, headline) {
-  const row = {
-    slug: slugify(post.slug || post.title),
+  const baseSlug = slugify(post.slug || post.title);
+  const baseRef = db.collection('blogs').doc(baseSlug);
+  const existing = await baseRef.get();
+  const finalSlug = existing.exists ? `${baseSlug}-${Date.now().toString(36)}` : baseSlug;
+
+  await db.collection('blogs').doc(finalSlug).set({
     title: post.title,
     excerpt: post.excerpt,
     content: post.content,
     keyword: headline.slice(0, 200),
-    image_url: image?.url || null,
-    image_credit_name: image?.creditName || null,
-    image_credit_url: image?.creditUrl || null,
+    imageUrl: image?.url || null,
+    imageCreditName: image?.creditName || null,
+    imageCreditUrl: image?.creditUrl || null,
     published: true,
-  };
+    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+  });
 
-  const insertOnce = async (slug) => {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/blogs`, {
-      method: 'POST',
-      headers: {
-        apikey: SUPABASE_SERVICE_ROLE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=representation',
-      },
-      body: JSON.stringify({ ...row, slug }),
-    });
-    return res;
-  };
-
-  let res = await insertOnce(row.slug);
-  if (res.status === 409) {
-    // Slug collision — retry once with a short unique suffix.
-    res = await insertOnce(`${row.slug}-${Date.now().toString(36)}`);
-  }
-
-  if (!res.ok) {
-    throw new Error(`Supabase insert failed ${res.status}: ${await res.text()}`);
-  }
-
-  const inserted = await res.json();
-  console.log('Blog post created:', inserted[0]?.title, '(' + inserted[0]?.slug + ')');
+  console.log('Blog post created:', post.title, '(' + finalSlug + ')');
 }
 
 async function main() {
@@ -203,7 +188,7 @@ async function main() {
   console.log('Fetching image for:', post.image_query);
   const image = await fetchUnsplashImage(post.image_query);
 
-  console.log('Saving to Supabase...');
+  console.log('Saving to Firestore...');
   await insertBlog(post, image, headline);
 
   console.log('Done.');

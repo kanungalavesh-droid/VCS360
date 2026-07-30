@@ -1,0 +1,26 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Public lead form: anyone can submit a lead, nobody can read/edit/delete
+    // them from the client. View leads via the Firebase console instead.
+    match /leads/{leadId} {
+      allow create: if request.resource.data.keys().hasAll(['name', 'phone'])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.phone is string
+                    && request.resource.data.phone.size() > 0;
+      allow read, update, delete: if false;
+    }
+
+    // Blog posts: public can read published posts only. Full read/write
+    // access requires being signed in (the single admin account used by
+    // admin.html). The automated generator script uses the Admin SDK with a
+    // service account, which bypasses these rules entirely.
+    match /blogs/{blogId} {
+      allow read: if resource.data.published == true || request.auth != null;
+      allow create, update, delete: if request.auth != null;
+    }
+  }
+}
