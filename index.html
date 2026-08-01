@@ -641,6 +641,29 @@
   .testi-name { color: var(--white); font-size: 14px; font-weight: 600; }
   .testi-meta { color: rgba(255,255,255,0.4); font-size: 11.5px; margin-top: 2px; }
 
+  /* ── LATEST INSIGHTS ── */
+  .insights-bg { background: #F0F4FA; }
+  .insights-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px; margin-top: 44px;
+  }
+  .insight-card {
+    background: var(--white); border-radius: 14px; overflow: hidden;
+    box-shadow: 0 6px 22px rgba(11,28,61,0.07); text-decoration: none; color: inherit;
+    display: flex; flex-direction: column;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .insight-card:hover { transform: translateY(-6px); box-shadow: 0 16px 34px rgba(11,28,61,0.14); }
+  .insight-card .img-wrap { height: 170px; overflow: hidden; background: #e2e6ec; }
+  .insight-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .insight-card:hover img { transform: scale(1.08); }
+  .insight-card-body { padding: 18px 20px 20px; }
+  .insight-tag { color: var(--emerald); font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+  .insight-card h3 { font-family: 'Playfair Display', serif; font-size: 16.5px; line-height: 1.35; margin: 8px 0 10px; }
+  .insight-card p { color: #5A6A82; font-size: 13px; line-height: 1.6; }
+  .insights-cta { text-align: center; margin-top: 40px; }
+  .insights-empty { color: #7A8496; font-size: 14px; margin-top: 30px; }
+
   /* ── FAQ ── */
   .faq-bg { background: var(--off-white); }
   .faq-list { margin-top: 44px; max-width: 760px; }
@@ -1382,6 +1405,20 @@
   </div>
 </section>
 
+<!-- LATEST INSIGHTS -->
+<section class="insights-bg" id="insights">
+  <div class="section-inner">
+    <span class="section-label fade-up">From Our Blog</span>
+    <h2 class="section-title fade-up">Latest <span class="accent">Insights & Articles</span></h2>
+    <p class="section-sub fade-up">Practical guides on tax, GST, loans, investments and more — updated regularly.</p>
+    <div class="insights-grid" id="insightsGrid"></div>
+    <div class="insights-empty fade-up" id="insightsEmpty" style="display:none;">New articles are on the way — check back soon.</div>
+    <div class="insights-cta fade-up">
+      <a href="blogs.html" class="btn-primary">View All Articles →</a>
+    </div>
+  </div>
+</section>
+
 <!-- FAQ -->
 <section class="faq-bg">
   <div class="section-inner">
@@ -1633,6 +1670,47 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+async function loadLatestInsights() {
+  const grid = document.getElementById('insightsGrid');
+  const emptyEl = document.getElementById('insightsEmpty');
+  if (!grid) return;
+
+  try {
+    const snapshot = await db.collection('blogs')
+      .where('published', '==', true)
+      .orderBy('createdAt', 'desc')
+      .limit(3)
+      .get();
+    const posts = snapshot.docs.map(doc => ({ slug: doc.id, ...doc.data() }));
+
+    if (posts.length === 0) {
+      emptyEl.style.display = 'block';
+      return;
+    }
+
+    grid.innerHTML = posts.map(post => `
+      <a class="insight-card fade-up visible" href="blog.html?slug=${encodeURIComponent(post.slug)}">
+        <div class="img-wrap"><img src="${escapeHtml(post.imageUrl) || 'images/img-advisory.png'}" alt="${escapeHtml(post.title)}" loading="lazy"/></div>
+        <div class="insight-card-body">
+          <span class="insight-tag">Finance & Advisory</span>
+          <h3>${escapeHtml(post.title)}</h3>
+          <p>${escapeHtml(post.excerpt)}</p>
+        </div>
+      </a>
+    `).join('');
+  } catch (err) {
+    console.error('Could not load insights:', err);
+    emptyEl.style.display = 'block';
+  }
+}
+loadLatestInsights();
 
 async function submitLeadForm(e) {
   e.preventDefault();

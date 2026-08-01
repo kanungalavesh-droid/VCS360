@@ -56,6 +56,17 @@
   .btn-save { background:var(--emerald); color:var(--white); }
   .btn-cancel { background:#F0F2F6; }
   .empty { text-align:center; padding:40px; color:#8A93A6; }
+
+  .generate-panel { background:var(--white); border-radius:12px; padding:22px 24px; margin-bottom:24px; box-shadow:0 4px 18px rgba(11,28,61,0.06); }
+  .generate-panel h2 { font-family:'Playfair Display',serif; font-size:16px; margin-bottom:4px; }
+  .generate-panel > p { color:#7A8496; font-size:13px; margin-bottom:16px; }
+  .generate-row { display:flex; gap:10px; }
+  .generate-row input { flex:1; padding:11px 14px; border:1px solid #DCE1EA; border-radius:8px; font-size:13px; }
+  .generate-row button { padding:11px 20px; background:var(--navy); color:var(--white); border:none; border-radius:8px; font-weight:600; font-size:13px; cursor:pointer; white-space:nowrap; }
+  .generate-row button:disabled { opacity:0.6; cursor:default; }
+  .generate-status { margin-top:12px; font-size:13px; min-height:18px; }
+  .generate-status.error { color:var(--red); }
+  .generate-status.success { color:var(--emerald); }
 </style>
 </head>
 <body>
@@ -73,6 +84,16 @@
 </div>
 
 <div id="adminScreen">
+  <div class="generate-panel">
+    <h2>Generate New Post</h2>
+    <p>Type a topic or keyword — Gemini writes the post and Unsplash finds a matching photo. It's saved as a draft, so review it below before publishing.</p>
+    <div class="generate-row">
+      <input type="text" id="genTopic" placeholder="e.g. New GST rules for small businesses in 2026" onkeydown="if(event.key==='Enter') generatePost();"/>
+      <button id="genBtn" onclick="generatePost()">Generate</button>
+    </div>
+    <div class="generate-status" id="genStatus"></div>
+  </div>
+
   <div class="toolbar">
     <p id="countMsg">Loading posts...</p>
   </div>
@@ -206,6 +227,47 @@ async function loadPosts() {
       </td>
     </tr>
   `).join('');
+}
+
+async function generatePost() {
+  const topicEl = document.getElementById('genTopic');
+  const btn = document.getElementById('genBtn');
+  const statusEl = document.getElementById('genStatus');
+  const topic = topicEl.value.trim();
+
+  if (!topic) {
+    statusEl.className = 'generate-status error';
+    statusEl.textContent = 'Please enter a topic first.';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  statusEl.className = 'generate-status';
+  statusEl.textContent = 'Writing your post — this can take 10-20 seconds...';
+
+  try {
+    const idToken = await auth.currentUser.getIdToken();
+    const res = await fetch('/.netlify/functions/generate-blog', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic, idToken }),
+    });
+    const result = await res.json();
+
+    if (!res.ok) throw new Error(result.error || 'Generation failed.');
+
+    statusEl.className = 'generate-status success';
+    statusEl.textContent = `Draft created: "${result.title}". Find it below and click Publish when you're happy with it.`;
+    topicEl.value = '';
+    loadPosts();
+  } catch (err) {
+    statusEl.className = 'generate-status error';
+    statusEl.textContent = err.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Generate';
+  }
 }
 
 function openEdit(id) {

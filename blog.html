@@ -34,25 +34,37 @@
   .nav-logo-text span:last-child { font-size:9px; font-weight:500; color:var(--gold); letter-spacing:1.5px; text-transform:uppercase; }
   .nav-cta { background:var(--gold); color:var(--navy); font-weight:700; padding:10px 20px; border-radius:8px; font-size:14px; }
 
-  .wrap { max-width:760px; margin:0 auto; padding:50px 24px 90px; }
-  .back { color:var(--emerald); font-weight:600; font-size:13px; display:inline-block; margin-bottom:24px; }
-  .tag { color:var(--emerald); font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; }
-  h1 { font-family:'Playfair Display',serif; font-size:clamp(26px,4vw,38px); margin:12px 0 14px; line-height:1.25; }
-  .meta { color:#8A93A6; font-size:13px; margin-bottom:28px; }
-  .hero-img { width:100%; max-height:420px; object-fit:cover; border-radius:14px; margin-bottom:32px; background:#e2e6ec; }
-  .content { font-size:16px; line-height:1.85; color:#2A3550; }
-  .content h2 { font-family:'Playfair Display',serif; font-size:22px; margin:32px 0 14px; }
-  .content h3 { font-family:'Playfair Display',serif; font-size:19px; margin:26px 0 12px; }
-  .content p { margin-bottom:16px; }
-  .content ul, .content ol { margin:0 0 16px 22px; }
-  .content li { margin-bottom:8px; }
-  .credit { margin-top:14px; font-size:11px; color:#9AA4B4; }
+  .wrap { max-width:760px; margin:0 auto; padding:44px 24px 30px; }
+  .back { color:var(--emerald); font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:6px; margin-bottom:24px; transition:gap .2s; }
+  .back:hover { gap:10px; }
+  .tag { display:inline-block; color:var(--emerald); background:#E4F5EC; font-size:11px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; padding:5px 12px; border-radius:20px; }
+  h1 { font-family:'Playfair Display',serif; font-size:clamp(26px,4vw,40px); margin:16px 0 16px; line-height:1.25; }
+  .meta { display:flex; gap:12px; align-items:center; color:#8A93A6; font-size:13px; margin-bottom:28px; }
+  .hero-img { width:100%; max-height:440px; object-fit:cover; border-radius:16px; margin-bottom:8px; background:#e2e6ec; box-shadow:0 12px 34px rgba(11,28,61,0.12); }
+  .credit { margin-bottom:32px; font-size:11px; color:#9AA4B4; }
   .credit a { color:#9AA4B4; text-decoration:underline; }
-  .cta-box { margin-top:48px; padding:28px; background:var(--navy); border-radius:14px; text-align:center; }
-  .cta-box p { color:rgba(255,255,255,0.75); margin-bottom:14px; font-size:14px; }
-  .cta-box a { display:inline-block; background:var(--gold); color:var(--navy); font-weight:700; padding:12px 26px; border-radius:8px; font-size:14px; }
+  .content { font-size:16.5px; line-height:1.9; color:#2A3550; max-width:760px; margin:0 auto; padding:0 24px; }
+  .content h2 { font-family:'Playfair Display',serif; font-size:23px; margin:34px 0 14px; }
+  .content h3 { font-family:'Playfair Display',serif; font-size:19px; margin:28px 0 12px; }
+  .content p { margin-bottom:17px; }
+  .content ul, .content ol { margin:0 0 17px 22px; }
+  .content li { margin-bottom:8px; }
+  .cta-box { max-width:760px; margin:48px auto 0; padding:32px; background:var(--navy); border-radius:16px; text-align:center; }
+  .cta-box p { color:rgba(255,255,255,0.75); margin-bottom:16px; font-size:14px; }
+  .cta-box a { display:inline-block; background:var(--gold); color:var(--navy); font-weight:700; padding:12px 26px; border-radius:8px; font-size:14px; transition:transform .2s; }
+  .cta-box a:hover { transform:translateY(-2px); }
+
+  .related { max-width:1000px; margin:56px auto 0; padding:0 24px; }
+  .related h2 { font-family:'Playfair Display',serif; font-size:20px; margin-bottom:20px; }
+  .related-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px; }
+  .related-card { background:var(--white); border-radius:12px; overflow:hidden; box-shadow:0 4px 18px rgba(11,28,61,0.08); transition:transform .25s, box-shadow .25s; }
+  .related-card:hover { transform:translateY(-4px); box-shadow:0 12px 28px rgba(11,28,61,0.14); }
+  .related-card img { width:100%; height:130px; object-fit:cover; background:#e2e6ec; }
+  .related-card-body { padding:14px 16px; }
+  .related-card h4 { font-family:'Playfair Display',serif; font-size:14.5px; line-height:1.35; }
+
   .status { text-align:center; padding:60px 20px; color:#7A8496; }
-  footer { background:var(--navy); color:rgba(255,255,255,0.5); text-align:center; padding:28px; font-size:13px; }
+  footer { background:var(--navy); color:rgba(255,255,255,0.5); text-align:center; padding:28px; margin-top:60px; font-size:13px; }
 </style>
 </head>
 <body>
@@ -70,10 +82,12 @@
 
 <div class="wrap">
   <a href="blogs.html" class="back">&larr; Back to Insights</a>
-  <div id="postContent">
+  <div id="postHead">
     <div class="status" id="statusMsg">Loading article...</div>
   </div>
 </div>
+<div id="postBody"></div>
+<div id="relatedWrap"></div>
 
 <footer>
   &copy; <span id="year"></span> Vardhman Consultancy Services. All rights reserved.
@@ -106,50 +120,94 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString('en-IN', { day:'numeric', month:'long', year:'numeric' });
 }
 
+function readingTime(html) {
+  const words = (html || '').replace(/<[^>]+>/g, ' ').trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
+
+async function loadRelated(currentSlug) {
+  const relatedWrap = document.getElementById('relatedWrap');
+  try {
+    const snapshot = await db.collection('blogs')
+      .where('published', '==', true)
+      .orderBy('createdAt', 'desc')
+      .limit(4)
+      .get();
+    const posts = snapshot.docs
+      .map(doc => ({ slug: doc.id, ...doc.data() }))
+      .filter(p => p.slug !== currentSlug)
+      .slice(0, 3);
+
+    if (posts.length === 0) return;
+
+    relatedWrap.innerHTML = `
+      <div class="related">
+        <h2>More Articles</h2>
+        <div class="related-grid">
+          ${posts.map(p => `
+            <a class="related-card" href="blog.html?slug=${encodeURIComponent(p.slug)}">
+              <img src="${escapeHtml(p.imageUrl) || 'images/img-advisory.png'}" alt="${escapeHtml(p.title)}"/>
+              <div class="related-card-body"><h4>${escapeHtml(p.title)}</h4></div>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 async function loadPost() {
-  const container = document.getElementById('postContent');
+  const headEl = document.getElementById('postHead');
+  const bodyEl = document.getElementById('postBody');
   const params = new URLSearchParams(window.location.search);
   const slug = params.get('slug');
 
   if (!slug) {
-    container.innerHTML = '<div class="status">Article not found.</div>';
+    headEl.innerHTML = '<div class="status">Article not found.</div>';
     return;
   }
 
   let data, error;
   try {
     const doc = await db.collection('blogs').doc(slug).get();
-    if (!doc.exists || doc.data().published !== true) {
-      data = null;
-    } else {
-      data = doc.data();
-    }
+    data = (doc.exists && doc.data().published === true) ? doc.data() : null;
   } catch (err) {
     error = err;
   }
 
   if (error || !data) {
     console.error(error);
-    container.innerHTML = '<div class="status">This article could not be found.</div>';
+    headEl.innerHTML = '<div class="status">This article could not be found.</div>';
     return;
   }
 
   document.title = data.title + ' | Vardhman Consultancy Services';
 
-  container.innerHTML = `
-    <div class="tag">${escapeHtml(data.keyword) || 'Finance & Advisory'}</div>
+  headEl.innerHTML = `
+    <span class="tag">${escapeHtml(data.keyword) || 'Finance & Advisory'}</span>
     <h1>${escapeHtml(data.title)}</h1>
-    <div class="meta">${data.createdAt ? formatDate(data.createdAt.toDate()) : ''}</div>
+    <div class="meta">
+      <span>${data.createdAt ? formatDate(data.createdAt.toDate()) : ''}</span>
+      <span>&middot;</span>
+      <span>${readingTime(data.content)} min read</span>
+    </div>
     ${data.imageUrl ? `
       <img class="hero-img" src="${escapeHtml(data.imageUrl)}" alt="${escapeHtml(data.title)}"/>
       ${data.imageCreditName ? `<div class="credit">Photo by <a href="${escapeHtml(data.imageCreditUrl)}" target="_blank" rel="noopener">${escapeHtml(data.imageCreditName)}</a> on Unsplash</div>` : ''}
     ` : ''}
+  `;
+
+  bodyEl.innerHTML = `
     <div class="content">${data.content}</div>
     <div class="cta-box">
       <p>Have a question about tax, GST, loans, or investments? Talk to our advisory team, free.</p>
       <a href="index.html#contact">Book Free Consultation</a>
     </div>
   `;
+
+  loadRelated(slug);
 }
 
 loadPost();
