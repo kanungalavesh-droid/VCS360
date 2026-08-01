@@ -3,7 +3,7 @@
 // photo doesn't actually fit the article.
 
 import {
-  getDb, fetchUnsplashImage, checkImageRelevance, getUsedImageUrls, getAdminAuth,
+  getDb, getBlogImage, checkImageRelevance, getUsedImageUrls, getAdminAuth,
 } from '../../scripts/blog-generator-core.mjs';
 
 const ADMIN_EMAILS = ['kanunga.lavesh@gmail.com'];
@@ -47,16 +47,19 @@ export const handler = async (event) => {
 
     const usedUrls = await getUsedImageUrls();
     if (post.imageUrl) usedUrls.push(post.imageUrl); // never pick the same image again
-    const image = await fetchUnsplashImage(imageQuery, usedUrls);
+    const image = await getBlogImage({ query: imageQuery, title: post.title, slug, excludeUrls: usedUrls });
     if (!image) {
-      return { statusCode: 404, body: JSON.stringify({ error: 'No alternative image found for that query.' }) };
+      return { statusCode: 404, body: JSON.stringify({ error: 'Could not generate or find an alternative image.' }) };
     }
-    const imageRelevance = await checkImageRelevance(image.url, post.title, post.excerpt);
+    const imageRelevance = (image.source === 'unsplash')
+      ? await checkImageRelevance(image.url, post.title, post.excerpt)
+      : null;
 
     await docRef.update({
       imageUrl: image.url,
       imageCreditName: image.creditName,
       imageCreditUrl: image.creditUrl,
+      imageSource: image.source,
       imageRelevance: imageRelevance || null,
     });
 

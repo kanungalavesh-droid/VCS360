@@ -8,9 +8,12 @@ import admin from 'firebase-admin';
 const {
   GEMINI_API_KEY,
   GEMINI_MODEL = 'gemini-flash-latest',
+  GEMINI_IMAGE_MODEL = 'gemini-2.5-flash-image',
   UNSPLASH_ACCESS_KEY,
   FIREBASE_SERVICE_ACCOUNT,
 } = process.env;
+
+const STORAGE_BUCKET = 'vcs360-website.firebasestorage.app';
 
 export const AUTHOR_NAME = 'VCS Advisory Team';
 
@@ -20,7 +23,10 @@ function getApp() {
   // may re-enter this module without a fresh process), avoid re-init errors.
   return admin.apps.length
     ? admin.app()
-    : admin.initializeApp({ credential: admin.credential.cert(JSON.parse(FIREBASE_SERVICE_ACCOUNT)) });
+    : admin.initializeApp({
+        credential: admin.credential.cert(JSON.parse(FIREBASE_SERVICE_ACCOUNT)),
+        storageBucket: STORAGE_BUCKET,
+      });
 }
 
 export function getDb() {
@@ -208,6 +214,78 @@ export async function fetchUnsplashImage(query, excludeUrls = []) {
   }
 }
 
+// Asks Gemini to generate an original cover image for the post. Returns raw
+// image bytes, or null on any failure (wrong/unavailable model, quota, etc.)
+// — the caller falls back to Unsplash in that case, so a bad model name
+// here never breaks generation, it just quietly degrades.
+export async function generateImageWithGemini(prompt) {
+  if (!GEMINI_API_KEY) return null;
+  try {
+    const body = {
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { responseModalities: ['IMAGE'] },
+    };
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_IMAGE_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(45000) }
+    );
+
+    if (!res.ok) {
+      console.warn(`Gemini image generation failed ${res.status}: ${await res.text()}`);
+      return null;
+    }
+
+    const json = await res.json();
+    const parts = json.candidates?.[0]?.content?.parts || [];
+    const imgPart = parts.find(p => p.inlineData);
+    if (!imgPart) {
+      console.warn('Gemini image generation returned no image data: ' + JSON.stringify(json).slice(0, 300));
+      return null;
+    }
+
+    return {
+      buffer: Buffer.from(imgPart.inlineData.data, 'base64'),
+      mimeType: imgPart.inlineData.mimeType || 'image/png',
+    };
+  } catch (err) {
+    console.warn('Gemini image generation error: ' + err.message);
+    return null;
+  }
+}
+
+// Uploads generated image bytes to Firebase Storage and returns a public
+// download URL. Relies on storage.rules to allow public reads of
+// blog-images/** — does not touch object ACLs (incompatible with the
+// uniform bucket-level access Firebase projects use by default).
+export async function uploadImageToStorage(buffer, mimeType, slug) {
+  const ext = mimeType.includes('png') ? 'png' : mimeType.includes('webp') ? 'webp' : 'jpg';
+  const path = `blog-images/${slug}-${Date.now().toString(36)}.${ext}`;
+  const bucket = getApp().storage().bucket();
+  await bucket.file(path).save(buffer, { metadata: { contentType: mimeType } });
+  return `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(path)}?alt=media`;
+}
+
+// Main image pipeline: try an original Gemini-generated image first (better
+// fit for niche topics than stock photo search), fall back to Unsplash if
+// generation or upload fails for any reason.
+export async function getBlogImage({ query, title, slug, excludeUrls = [] }) {
+  const prompt = `A professional, clean editorial illustration for an Indian financial consultancy's blog article titled "${title}". Topic: ${query}. Style: modern flat illustration, minimalist, no text or letters or numbers anywhere in the image, 16:9 landscape composition suitable as a website blog header, color palette of navy blue, emerald green, and gold.`;
+
+  const generated = await generateImageWithGemini(prompt);
+  if (generated) {
+    try {
+      const url = await uploadImageToStorage(generated.buffer, generated.mimeType, slug);
+      return { url, creditName: null, creditUrl: null, source: 'gemini' };
+    } catch (err) {
+      console.warn('Firebase Storage upload failed, falling back to Unsplash: ' + err.message);
+    }
+  }
+
+  const unsplash = await fetchUnsplashImage(query, excludeUrls);
+  return unsplash ? { ...unsplash, source: 'unsplash' } : null;
+}
+
 // Asks Gemini's vision model whether the chosen photo actually matches the
 // post. Best-effort: any failure just returns null (treated as "unchecked"
 // by the UI) rather than blocking generation.
@@ -290,6 +368,7 @@ export async function insertBlog({ post, image, topic, published, seoChecks, ima
     imageUrl: image?.url || null,
     imageCreditName: image?.creditName || null,
     imageCreditUrl: image?.creditUrl || null,
+    imageSource: image?.source || null,
     imageRelevance: imageRelevance || null,
     seoChecks: seoChecks || null,
     author: AUTHOR_NAME,

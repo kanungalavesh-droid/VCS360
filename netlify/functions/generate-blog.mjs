@@ -4,8 +4,8 @@
 // ID token, which we verify here before doing anything.
 
 import {
-  generatePost, fetchUnsplashImage, checkImageRelevance, computeSeoChecks,
-  getUsedImageUrls, insertBlog, getAdminAuth,
+  generatePost, getBlogImage, checkImageRelevance, computeSeoChecks,
+  getUsedImageUrls, insertBlog, getAdminAuth, slugify,
 } from '../../scripts/blog-generator-core.mjs';
 
 // Keep in sync with the admin allowlist in firestore.rules.
@@ -47,8 +47,11 @@ export const handler = async (event) => {
     const post = await generatePost(cleanTopic);
 
     const usedUrls = await getUsedImageUrls();
-    const image = await fetchUnsplashImage(post.image_query, usedUrls);
-    const imageRelevance = image ? await checkImageRelevance(image.url, post.title, post.excerpt) : null;
+    const slug = slugify(post.slug || post.title);
+    const image = await getBlogImage({ query: post.image_query, title: post.title, slug, excludeUrls: usedUrls });
+    const imageRelevance = (image && image.source === 'unsplash')
+      ? await checkImageRelevance(image.url, post.title, post.excerpt)
+      : null;
     const seoChecks = computeSeoChecks(post, cleanTopic);
 
     const result = await insertBlog({ post, image, topic: cleanTopic, published: false, seoChecks, imageRelevance });

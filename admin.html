@@ -436,6 +436,7 @@ function seoBadge(seoChecks) {
 
 function imageCheckIcon(post) {
   if (!post.imageUrl) return '<span class="img-check" title="No image">—</span>';
+  if (post.imageSource === 'gemini') return '<span class="img-check" title="AI-generated for this topic">✨</span>';
   if (!post.imageRelevance) return '<span class="img-check" title="Not checked">❔</span>';
   return post.imageRelevance.aligned
     ? '<span class="img-check" title="' + escapeHtml(post.imageRelevance.note || '') + '">✅</span>'
@@ -490,14 +491,18 @@ let contentEditMode = false;
 function renderModalImage(post) {
   const wrap = document.getElementById('modalImgWrap');
   const relBox = document.getElementById('imgRelevanceBox');
+  const sourceLabel = post.imageSource === 'gemini' ? '✨ AI Generated' : post.imageSource === 'unsplash' ? '📷 Unsplash' : '';
 
   wrap.innerHTML = post.imageUrl
-    ? `<img src="${escapeHtml(post.imageUrl)}" alt=""/>`
+    ? `<img src="${escapeHtml(post.imageUrl)}" alt=""/>${sourceLabel ? `<div style="text-align:center;font-size:11px;color:#9AA4B4;margin-top:6px;">${sourceLabel}</div>` : ''}`
     : `<div class="no-img">No image</div>`;
 
   if (!post.imageUrl) {
     relBox.className = 'img-relevance unchecked';
     relBox.textContent = 'No image attached to this post.';
+  } else if (post.imageSource === 'gemini') {
+    relBox.className = 'img-relevance good';
+    relBox.textContent = '✅ Generated specifically for this topic — no relevance check needed.';
   } else if (!post.imageRelevance) {
     relBox.className = 'img-relevance unchecked';
     relBox.textContent = 'Image was not checked against the topic.';
@@ -580,10 +585,10 @@ async function regenerateImage() {
     if (!res.ok) throw new Error(result.error || 'Could not regenerate image.');
 
     document.getElementById('editImageUrl').value = result.image.url;
-    const updatedPost = { ...post, imageUrl: result.image.url, imageRelevance: result.imageRelevance };
+    const updatedPost = { ...post, imageUrl: result.image.url, imageSource: result.image.source, imageRelevance: result.imageRelevance };
     renderModalImage(updatedPost);
     // keep local cache in sync until the table reloads
-    Object.assign(post, { imageUrl: result.image.url, imageCreditName: result.image.creditName, imageCreditUrl: result.image.creditUrl, imageRelevance: result.imageRelevance });
+    Object.assign(post, { imageUrl: result.image.url, imageCreditName: result.image.creditName, imageCreditUrl: result.image.creditUrl, imageSource: result.image.source, imageRelevance: result.imageRelevance });
   } catch (err) {
     alert(err.message);
   } finally {
