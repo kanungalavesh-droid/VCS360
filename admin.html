@@ -29,12 +29,7 @@
     padding:16px 32px; background:var(--navy); color:var(--white);
   }
   .header-left { display:flex; align-items:center; gap:10px; }
-  .header-mark {
-    width:34px; height:34px; border-radius:8px;
-    background:linear-gradient(135deg, var(--gold), var(--gold-light));
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Playfair Display',serif; font-weight:700; color:var(--navy); font-size:13px;
-  }
+  .header-mark { height:34px; width:auto; object-fit:contain; }
   header h1 { font-family:'Playfair Display',serif; font-size:17px; }
   header p { font-size:11.5px; color:rgba(255,255,255,0.5); margin-top:1px; }
   #logoutBtn { background:none; border:1px solid rgba(255,255,255,0.3); color:var(--white); padding:8px 16px; border-radius:8px; cursor:pointer; font-size:13px; display:none; }
@@ -159,7 +154,7 @@
 
 <header>
   <div class="header-left">
-    <div class="header-mark">VCS</div>
+    <img src="logo.png" alt="VCS" class="header-mark"/>
     <div>
       <h1>Blog Control Panel</h1>
       <p>Vardhman Consultancy Services</p>

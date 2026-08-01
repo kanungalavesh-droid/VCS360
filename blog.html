@@ -23,12 +23,7 @@
     padding:16px 40px; background:var(--navy); position:sticky; top:0; z-index:100;
   }
   .nav-logo { display:flex; align-items:center; gap:10px; }
-  .nav-logo-mark {
-    width:40px; height:40px; border-radius:8px;
-    background:linear-gradient(135deg, var(--gold), var(--gold-light));
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Playfair Display',serif; font-weight:700; color:var(--navy); font-size:16px;
-  }
+  .nav-logo-mark { height:42px; width:auto; object-fit:contain; }
   .nav-logo-text { display:flex; flex-direction:column; }
   .nav-logo-text span:first-child { font-family:'Playfair Display',serif; font-size:15px; font-weight:600; color:var(--white); line-height:1.1; }
   .nav-logo-text span:last-child { font-size:9px; font-weight:500; color:var(--gold); letter-spacing:1.5px; text-transform:uppercase; }
@@ -51,8 +46,11 @@
   .content li { margin-bottom:8px; }
   .cta-box { max-width:760px; margin:48px auto 0; padding:32px; background:var(--navy); border-radius:16px; text-align:center; }
   .cta-box p { color:rgba(255,255,255,0.75); margin-bottom:16px; font-size:14px; }
-  .cta-box a { display:inline-block; background:var(--gold); color:var(--navy); font-weight:700; padding:12px 26px; border-radius:8px; font-size:14px; transition:transform .2s; }
+  .cta-box a { display:inline-block; background:var(--gold); color:var(--navy); font-weight:700; padding:12px 22px; border-radius:8px; font-size:13.5px; transition:transform .2s; margin:0 6px; }
+  .cta-box a.wa { background:#25D366; color:#fff; }
+  .cta-box a.email { background:transparent; color:var(--white); border:1.5px solid rgba(255,255,255,0.5); }
   .cta-box a:hover { transform:translateY(-2px); }
+  .cta-box .btns { display:flex; flex-wrap:wrap; justify-content:center; gap:4px; }
 
   .related { max-width:1000px; margin:56px auto 0; padding:0 24px; }
   .related h2 { font-family:'Playfair Display',serif; font-size:20px; margin-bottom:20px; }
@@ -71,7 +69,7 @@
 
 <nav>
   <a href="index.html" class="nav-logo">
-    <div class="nav-logo-mark">VCS</div>
+    <img src="logo.png" alt="Vardhman Consultancy Services" class="nav-logo-mark"/>
     <div class="nav-logo-text">
       <span>Vardhman</span>
       <span>Consultancy Services</span>
@@ -202,8 +200,13 @@ async function loadPost() {
   bodyEl.innerHTML = `
     <div class="content">${data.content}</div>
     <div class="cta-box">
-      <p>Have a question about tax, GST, loans, or investments? Talk to our advisory team, free.</p>
-      <a href="index.html#contact">Book Free Consultation</a>
+      <h3 style="font-family:'Playfair Display',serif;color:#fff;font-size:20px;margin-bottom:8px;">Need Expert Financial Advice?</h3>
+      <p>Schedule a FREE Consultation Today.</p>
+      <div class="btns">
+        <a href="tel:+918866994022">📞 Call</a>
+        <a href="https://wa.me/918866994022" class="wa" target="_blank">💬 WhatsApp</a>
+        <a href="mailto:info@vcs360.com" class="email">✉️ Email</a>
+      </div>
     </div>
   `;
 

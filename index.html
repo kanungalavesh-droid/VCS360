@@ -60,13 +60,7 @@
     text-decoration: none;
   }
   .nav-logo-mark {
-    width: 40px; height: 40px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Playfair Display', serif;
-    font-weight: 700; color: var(--navy); font-size: 16px;
-    letter-spacing: -0.5px;
+    height: 42px; width: auto; object-fit: contain;
   }
   .nav-logo-text { display: flex; flex-direction: column; }
   .nav-logo-text span:first-child {
@@ -157,6 +151,12 @@
   .hero-badge-dot { width: 6px; height: 6px; background: var(--emerald); border-radius: 50%; animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.3); } }
 
+  .hero-tagline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(15px, 1.6vw, 18px);
+    font-style: italic; font-weight: 600; color: var(--gold);
+    margin-bottom: 14px; letter-spacing: 0.2px;
+  }
   .hero-pretext {
     font-size: clamp(16px, 1.8vw, 20px);
     color: rgba(255,255,255,0.6);
@@ -306,6 +306,15 @@
   .section-title .accent { color: var(--emerald); }
   .section-sub { color: #5A6A82; font-size: 15.5px; line-height: 1.7; max-width: 580px; }
 
+  /* ── STATS BAR ── */
+  .stats-bg { background: var(--white); padding: 52px 5%; border-bottom: 1px solid #EEF1F6; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 1200px; margin: 0 auto; text-align: center; }
+  .stat-item { padding: 0 12px; }
+  .stat-num { font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(28px, 3.4vw, 40px); color: var(--navy); }
+  .stat-num .accent-gold { color: var(--gold); }
+  .stat-label { font-size: 13px; color: #6A7A8E; margin-top: 4px; }
+  @media (max-width: 700px) { .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 16px; } }
+
   /* ── PRODUCT CARDS ── */
   .services-bg { background: #F0F4FA; }
 
@@ -418,12 +427,12 @@
   }
   @media (hover: hover) {
     .product-card:hover .pc-list {
-      max-height: 300px; opacity: 1;
+      max-height: 420px; opacity: 1;
       padding: 14px; margin-bottom: 14px;
     }
   }
   /* Tap-open on touch: .open class added by JS */
-  .pc-list.open { max-height: 300px; opacity: 1; padding: 14px; margin-bottom: 14px; }
+  .pc-list.open { max-height: 420px; opacity: 1; padding: 14px; margin-bottom: 14px; }
 
   .pc-list li {
     font-size: 12.5px; color: rgba(255,255,255,0.72);
@@ -960,14 +969,14 @@
   <a href="#testimonials" onclick="closeMobile()">Testimonials</a>
   <a href="blogs.html" onclick="closeMobile()">Insights</a>
   <a href="#contact" onclick="closeMobile()">Contact</a>
-  <a href="tel:+919999999999" class="btn-nav-call" style="border-radius:8px;padding:12px 24px;background:var(--gold);color:var(--navy);font-weight:700;">📞 Call Now</a>
-  <a href="https://wa.me/919999999999" class="btn-nav-wa" style="border-radius:8px;padding:12px 24px;background:#25D366;color:#fff;font-weight:700;">💬 WhatsApp</a>
+  <a href="tel:+918866994022" class="btn-nav-call" style="border-radius:8px;padding:12px 24px;background:var(--gold);color:var(--navy);font-weight:700;">📞 Call Now</a>
+  <a href="https://wa.me/918866994022" class="btn-nav-wa" style="border-radius:8px;padding:12px 24px;background:#25D366;color:#fff;font-weight:700;">💬 WhatsApp</a>
 </div>
 
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">
-    <div class="nav-logo-mark">VCS</div>
+    <img src="logo.png" alt="Vardhman Consultancy Services" class="nav-logo-mark"/>
     <div class="nav-logo-text">
       <span>Vardhman</span>
       <span>Consultancy Services</span>
@@ -982,8 +991,8 @@
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="nav-ctas">
-    <a href="tel:+919999999999" class="btn-nav-call">📞 Call Now</a>
-    <a href="https://wa.me/919999999999" class="btn-nav-wa">💬 WhatsApp Expert</a>
+    <a href="tel:+918866994022" class="btn-nav-call">📞 Call Now</a>
+    <a href="https://wa.me/918866994022" class="btn-nav-wa">💬 WhatsApp Expert</a>
   </div>
   <div class="hamburger" onclick="openMobile()">
     <span></span><span></span><span></span>
@@ -999,13 +1008,14 @@
         <div class="hero-badge-dot"></div>
         100% Free Initial Consultation
       </div>
+      <p class="hero-tagline">"Your Trusted Partner in Financial Growth"</p>
       <p class="hero-pretext">Aapki financial journey, expertly guided through</p>
       <h1 class="hero-service-name" id="heroServiceName">Accounting</h1>
       <p class="hero-service-tag" id="heroServiceTag">Hisaab saaf toh business mazbooth. Har paisa accountable.</p>
       <p class="hero-sub">Chahe aap salaried ho, business owner ho, ya NRI — VCS ek hi jagah se aapke taxes, loans, investments, insurance aur business ki poori planning karta hai. Bilkul free mein.</p>
       <div class="hero-ctas">
         <a href="#contact" class="btn-primary">✦ Get Free Consultation</a>
-        <a href="https://wa.me/919999999999" class="btn-secondary" target="_blank">💬 Talk To Expert</a>
+        <a href="https://wa.me/918866994022" class="btn-secondary" target="_blank">💬 Talk To Expert</a>
       </div>
       <div class="hero-trust">
         <div class="trust-pill"><div class="trust-pill-dot">✓</div>Free Advisory</div>
@@ -1026,6 +1036,27 @@
   </div>
 </section>
 
+<!-- STATS -->
+<section class="stats-bg">
+  <div class="stats-grid">
+    <div class="stat-item fade-up">
+      <div class="stat-num">500<span class="accent-gold">+</span></div>
+      <div class="stat-label">Happy Clients</div>
+    </div>
+    <div class="stat-item fade-up">
+      <div class="stat-num">2500<span class="accent-gold">+</span></div>
+      <div class="stat-label">Income Tax Returns Filed</div>
+    </div>
+    <div class="stat-item fade-up">
+      <div class="stat-num">₹100<span class="accent-gold">+</span> Cr</div>
+      <div class="stat-label">Loan Assistance</div>
+    </div>
+    <div class="stat-item fade-up">
+      <div class="stat-num">8<span class="accent-gold">+</span></div>
+      <div class="stat-label">Years of Experience</div>
+    </div>
+  </div>
+</section>
 
 <!-- SERVICES -->
 <section class="services-bg" id="services">
@@ -1039,15 +1070,16 @@
         <div class="pc-img"><img src="img-taxation.png" alt="Taxation"/><div class="pc-img-ph">🧾</div></div>
         <div class="pc-body">
           <span class="pc-ghost">01</span>
-          <h3 class="pc-title">Taxation</h3>
+          <h3 class="pc-title">Income Tax Planning & Compliance</h3>
           <p class="pc-tagline">ITR filing se lekar tax planning tak — apna tax bachao, legally aur smartly.</p>
           <div class="pc-divider"></div>
           <ul class="pc-list" id="pcl1">
-            <li>Income Tax Returns (ITR)</li>
-            <li>Tax Planning & Optimization</li>
-            <li>Capital Gains Advisory</li>
-            <li>Tax Assessment & Appeals</li>
-            <li>TDS Advisory & Compliance</li>
+            <li>Individual ITR</li>
+            <li>Business ITR</li>
+            <li>Tax Planning</li>
+            <li>Capital Gain Advisory</li>
+            <li>Tax Notices</li>
+            <li>Income Tax Assessments</li>
           </ul>
           <div class="pc-footer"><a href="#contact" class="pc-cta">Consult Free →</a></div>
         </div>
@@ -1062,10 +1094,13 @@
           <div class="pc-divider"></div>
           <ul class="pc-list" id="pcl2">
             <li>GST Registration</li>
-            <li>Monthly / Annual GST Filing</li>
-            <li>GST Audits & Reconciliation</li>
-            <li>GST Refund Claims</li>
-            <li>E-Way Bill Management</li>
+            <li>GST Returns</li>
+            <li>GST Audit Support</li>
+            <li>GST Notices</li>
+            <li>LUT</li>
+            <li>E-way Bills</li>
+            <li>E-Invoicing</li>
+            <li>Annual Return</li>
           </ul>
           <div class="pc-footer"><a href="#contact" class="pc-cta">Consult Free →</a></div>
         </div>
@@ -1093,15 +1128,20 @@
         <div class="pc-img"><img src="img-loan.png" alt="Loan & Fund Raising"/><div class="pc-img-ph">🏦</div></div>
         <div class="pc-body">
           <span class="pc-ghost">04</span>
-          <h3 class="pc-title">Loan & Fund Raising</h3>
+          <h3 class="pc-title">Loans & Business Finance Solutions</h3>
           <p class="pc-tagline">Apna ghar, apna business — sapne bade ho toh fund bhi bada chahiye. Hum dilwate hain.</p>
           <div class="pc-divider"></div>
           <ul class="pc-list" id="pcl4">
-            <li>Home & Property Loans</li>
-            <li>Business & SME Loans</li>
-            <li>Working Capital Finance</li>
-            <li>Mortgage & LAP</li>
-            <li>Project Finance Advisory</li>
+            <li>Home Loan</li>
+            <li>Business Loan</li>
+            <li>Mortgage Loan</li>
+            <li>Working Capital</li>
+            <li>OD/CC</li>
+            <li>Project Finance</li>
+            <li>MSME Loans</li>
+            <li>Loan Against Property</li>
+            <li>Loan Against Mutual Funds</li>
+            <li>Loan Against Shares</li>
           </ul>
           <div class="pc-footer"><a href="#contact" class="pc-cta">Consult Free →</a></div>
         </div>
@@ -1162,6 +1202,9 @@
 
     </div>
     <div class="carousel-dots" id="carouselDots"></div>
+    <p class="fade-up" style="font-size:11.5px;color:#8A93A6;line-height:1.6;max-width:800px;margin-top:36px;">
+      <strong>Disclaimer:</strong> Insurance and investment-related services (including mutual funds, PMS, AIF, and insurance advisory) are offered only through the relevant registered/licensed entities, in accordance with applicable regulations. Mutual fund investments are subject to market risks; please read all scheme-related documents carefully. Investment and insurance advice is provided strictly within the scope of VCS's registrations and applicable law, and does not constitute a guarantee of returns.
+    </p>
   </div>
 </section>
 
@@ -1224,33 +1267,43 @@
     <div class="why-grid">
       <div class="why-card fade-up">
         <div class="why-num">01</div>
-        <h3>Free Initial Consultation</h3>
-        <p>Your first expert conversation is completely free. No hidden charges, no obligation to proceed.</p>
+        <h3>8+ Years of Professional Experience</h3>
+        <p>Years of hands-on advisory across tax, compliance, loans, and investments — real experience, not guesswork.</p>
       </div>
       <div class="why-card fade-up">
         <div class="why-num">02</div>
-        <h3>Personalized, Not Generic</h3>
-        <p>Every client receives solutions built specifically for their income, goals, and risk profile.</p>
+        <h3>One Stop Financial Solution</h3>
+        <p>Tax, compliance, wealth, loans, insurance, and business advisory — all under one trusted relationship.</p>
       </div>
       <div class="why-card fade-up">
         <div class="why-num">03</div>
-        <h3>Multi-Domain Expertise</h3>
-        <p>Tax, compliance, wealth, loans, and business advisory — all under one trusted relationship.</p>
+        <h3>Personalized Advisory</h3>
+        <p>Every client receives solutions built specifically for their income, goals, and risk profile.</p>
       </div>
       <div class="why-card fade-up">
         <div class="why-num">04</div>
-        <h3>Completely Confidential</h3>
-        <p>Your financial data and business plans stay strictly private. Always.</p>
+        <h3>Transparent Pricing</h3>
+        <p>No hidden charges, no surprise fees. You know exactly what you're paying for, upfront.</p>
       </div>
       <div class="why-card fade-up">
         <div class="why-num">05</div>
-        <h3>End-to-End Execution</h3>
-        <p>We don't just advise and disappear — we stay involved from planning to the final outcome.</p>
+        <h3>Timely Compliance</h3>
+        <p>Deadlines tracked and met — so you never worry about late filings or missed notices.</p>
       </div>
       <div class="why-card fade-up">
         <div class="why-num">06</div>
-        <h3>Long-Term Relationship</h3>
-        <p>We grow as you grow. Your evolving financial needs are met at every stage of life and business.</p>
+        <h3>Dedicated Relationship Manager</h3>
+        <p>One point of contact who knows your financial picture — no repeating your story to a new person each time.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-num">07</div>
+        <h3>Technology Driven Process</h3>
+        <p>Digital document collection, tracking, and reporting — faster turnaround with fewer back-and-forths.</p>
+      </div>
+      <div class="why-card fade-up">
+        <div class="why-num">08</div>
+        <h3>Confidential & Ethical Practice</h3>
+        <p>Your financial data and business plans stay strictly private, handled with the highest professional integrity.</p>
       </div>
     </div>
   </div>
@@ -1319,7 +1372,7 @@
         <p id="lf-status" style="min-height:16px;font-size:12px;margin:6px 0 0;"></p>
         <div class="form-btns">
           <button class="btn-callback" onclick="submitLeadForm(event)">📞 Request Callback</button>
-          <a href="https://wa.me/919999999999" class="btn-wa" target="_blank">
+          <a href="https://wa.me/918866994022" class="btn-wa" target="_blank">
             <span>💬</span> WhatsApp Now
           </a>
         </div>
@@ -1456,11 +1509,12 @@
 <!-- FINAL CTA -->
 <div class="final-cta">
   <div class="final-cta-inner fade-up">
-    <h2>Let's Build Your Financial Future Together</h2>
-    <p>Expert advice. Personalized solutions. Zero consultation fees. Start today.</p>
+    <h2>Need Expert Financial Advice?</h2>
+    <p>Schedule a FREE Consultation Today.</p>
     <div class="final-cta-btns">
-      <a href="tel:+919999999999" class="btn-white">📞 Call Now</a>
-      <a href="#contact" class="btn-outline-white">✦ Book Free Consultation</a>
+      <a href="tel:+918866994022" class="btn-white">📞 Call</a>
+      <a href="https://wa.me/918866994022" class="btn-white" target="_blank" style="background:#25D366;color:#fff;">💬 WhatsApp</a>
+      <a href="mailto:info@vcs360.com" class="btn-outline-white">✉️ Email</a>
     </div>
   </div>
 </div>
@@ -1471,17 +1525,18 @@
     <div class="footer-top">
       <div class="footer-brand">
         <a href="#" class="nav-logo" style="display:inline-flex;margin-bottom:4px;">
-          <div class="nav-logo-mark">VCS</div>
+          <img src="logo.png" alt="Vardhman Consultancy Services" style="height:40px;width:auto;"/>
           <div class="nav-logo-text">
             <span>Vardhman</span>
             <span>Consultancy Services</span>
           </div>
         </a>
-        <p>Your trusted financial and business advisory partner. Taxation · Compliance · Finance · Investments · Wealth Management · Business Advisory.</p>
+        <p style="color:var(--gold);font-weight:600;margin-top:10px;">Your Trusted Partner in Financial Growth</p>
+        <p>Taxation · Compliance · Finance · Investments · Wealth Management · Business Advisory.</p>
         <div class="footer-social">
           <a href="#" class="social-btn" title="LinkedIn">in</a>
           <a href="#" class="social-btn" title="Twitter">X</a>
-          <a href="https://wa.me/919999999999" class="social-btn" title="WhatsApp">💬</a>
+          <a href="https://wa.me/918866994022" class="social-btn" title="WhatsApp">💬</a>
           <a href="#" class="social-btn" title="YouTube">▶</a>
         </div>
       </div>
@@ -1506,10 +1561,10 @@
       </div>
       <div class="footer-col">
         <h4>Contact</h4>
-        <a href="tel:+919999999999">📞 +91-99999-99999</a>
-        <a href="https://wa.me/919999999999" target="_blank">💬 WhatsApp Us</a>
-        <a href="mailto:info@vardhmancs.com">✉ info@vardhmancs.com</a>
-        <a href="#">📍 India (Pan-India & NRI)</a>
+        <a href="tel:+918866994022">📞 +91 88669 94022</a>
+        <a href="https://wa.me/918866994022" target="_blank">💬 WhatsApp Us</a>
+        <a href="mailto:info@vcs360.com">✉ info@vcs360.com</a>
+        <a href="https://maps.google.com/?q=Shop+No.+20,+Ground+Floor,+Madhupark+Apartment,+Raveshiya+Park,+near+Morarji+Circle,+Gunjan+GIDC,+Vapi,+Gujarat+396195" target="_blank">📍 Shop No. 20, Madhupark Apartment, Raveshiya Park, near Morarji Circle, Gunjan GIDC, Vapi, Gujarat 396195</a>
       </div>
     </div>
     <hr class="footer-divider"/>
@@ -1525,7 +1580,7 @@
 </footer>
 
 <!-- Floating WA -->
-<a href="https://wa.me/919999999999" class="floating-wa" target="_blank" title="Chat on WhatsApp">💬</a>
+<a href="https://wa.me/918866994022" class="floating-wa" target="_blank" title="Chat on WhatsApp">💬</a>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
