@@ -3,7 +3,10 @@
 // reach the browser — the client only sends the topic plus their Firebase
 // ID token, which we verify here before doing anything.
 
-import { generatePost, fetchUnsplashImage, insertBlog, getAdminAuth } from '../../scripts/blog-generator-core.mjs';
+import {
+  generatePost, fetchUnsplashImage, checkImageRelevance, computeSeoChecks,
+  getUsedImageUrls, insertBlog, getAdminAuth,
+} from '../../scripts/blog-generator-core.mjs';
 
 // Keep in sync with the admin allowlist in firestore.rules.
 const ADMIN_EMAILS = ['kanunga.lavesh@gmail.com'];
@@ -38,11 +41,18 @@ export const handler = async (event) => {
     return { statusCode: 403, body: JSON.stringify({ error: 'Not authorized.' }) };
   }
 
+  const cleanTopic = topic.trim();
+
   try {
-    const post = await generatePost(topic.trim());
-    const image = await fetchUnsplashImage(post.image_query);
-    const result = await insertBlog(post, image, topic.trim(), false);
-    return { statusCode: 200, body: JSON.stringify({ success: true, ...result }) };
+    const post = await generatePost(cleanTopic);
+
+    const usedUrls = await getUsedImageUrls();
+    const image = await fetchUnsplashImage(post.image_query, usedUrls);
+    const imageRelevance = image ? await checkImageRelevance(image.url, post.title, post.excerpt) : null;
+    const seoChecks = computeSeoChecks(post, cleanTopic);
+
+    const result = await insertBlog({ post, image, topic: cleanTopic, published: false, seoChecks, imageRelevance });
+    return { statusCode: 200, body: JSON.stringify({ success: true, ...result, seoChecks, imageRelevance }) };
   } catch (err) {
     console.error('Manual blog generation failed:', err);
     return { statusCode: 500, body: JSON.stringify({ error: err.message || 'Generation failed.' }) };

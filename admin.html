@@ -6,60 +6,79 @@
 <title>Blog Admin | Vardhman Consultancy Services</title>
 <meta name="robots" content="noindex, nofollow"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
   :root {
     --navy: #0B1C3D;
+    --navy-light: #132850;
     --emerald: #0E8A5A;
+    --emerald-light: #E4F5EC;
     --gold: #C9973A;
+    --gold-light: #E5B55A;
     --red: #C0392B;
+    --red-light: #FBE9E7;
     --white: #FFFFFF;
     --bg: #F5F7FA;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'Inter',sans-serif; color:var(--navy); background:var(--bg); }
+  button { font-family:inherit; }
+
   header {
     display:flex; align-items:center; justify-content:space-between;
     padding:16px 32px; background:var(--navy); color:var(--white);
   }
-  header h1 { font-family:'Playfair Display',serif; font-size:18px; }
+  .header-left { display:flex; align-items:center; gap:10px; }
+  .header-mark {
+    width:34px; height:34px; border-radius:8px;
+    background:linear-gradient(135deg, var(--gold), var(--gold-light));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Playfair Display',serif; font-weight:700; color:var(--navy); font-size:13px;
+  }
+  header h1 { font-family:'Playfair Display',serif; font-size:17px; }
+  header p { font-size:11.5px; color:rgba(255,255,255,0.5); margin-top:1px; }
   #logoutBtn { background:none; border:1px solid rgba(255,255,255,0.3); color:var(--white); padding:8px 16px; border-radius:8px; cursor:pointer; font-size:13px; display:none; }
+  #logoutBtn:hover { background:rgba(255,255,255,0.08); }
 
-  #loginScreen { max-width:380px; margin:80px auto; background:var(--white); padding:36px 32px; border-radius:14px; box-shadow:0 8px 30px rgba(11,28,61,0.1); }
+  #loginScreen { max-width:380px; margin:80px auto; background:var(--white); padding:36px 32px; border-radius:14px; box-shadow:0 8px 30px rgba(11,28,61,0.1); text-align:center; }
   #loginScreen h2 { font-family:'Playfair Display',serif; margin-bottom:6px; }
   #loginScreen p { color:#7A8496; font-size:13px; margin-bottom:22px; }
   #loginScreen button { width:100%; padding:12px; background:var(--emerald); color:var(--white); border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:14px; }
   #loginError { color:var(--red); font-size:13px; margin-top:10px; min-height:18px; }
 
-  #adminScreen { display:none; max-width:1000px; margin:0 auto; padding:32px 24px 60px; }
-  .toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
-  .toolbar p { color:#7A8496; font-size:13px; }
-  table { width:100%; border-collapse:collapse; background:var(--white); border-radius:12px; overflow:hidden; box-shadow:0 4px 18px rgba(11,28,61,0.06); }
-  th, td { text-align:left; padding:14px 16px; font-size:13px; border-bottom:1px solid #EEF1F6; vertical-align:top; }
-  th { background:#F0F2F6; font-weight:600; color:#4A5468; }
-  td.title-cell { max-width:280px; }
-  .status-pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
-  .status-pill.pub { background:#E4F5EC; color:var(--emerald); }
-  .status-pill.draft { background:#F2F2F2; color:#888; }
-  .row-actions { display:flex; gap:8px; }
-  .row-actions button { border:none; background:#F0F2F6; padding:6px 12px; border-radius:6px; font-size:12px; cursor:pointer; }
-  .row-actions button.danger { background:#FBE9E7; color:var(--red); }
+  #adminScreen { display:none; max-width:1140px; margin:0 auto; padding:28px 24px 60px; }
 
-  .modal-bg { display:none; position:fixed; inset:0; background:rgba(11,28,61,0.5); align-items:center; justify-content:center; z-index:200; padding:20px; }
-  .modal { background:var(--white); border-radius:14px; padding:28px; width:100%; max-width:640px; max-height:85vh; overflow-y:auto; }
-  .modal h3 { font-family:'Playfair Display',serif; margin-bottom:16px; }
-  .modal label { display:block; font-size:12px; font-weight:600; color:#5A6578; margin:14px 0 6px; }
-  .modal input, .modal textarea { width:100%; padding:10px 12px; border:1px solid #DCE1EA; border-radius:8px; font-size:13px; font-family:inherit; }
-  .modal textarea { min-height:180px; resize:vertical; }
-  .modal-actions { display:flex; gap:10px; margin-top:22px; justify-content:flex-end; }
-  .modal-actions button { padding:10px 18px; border-radius:8px; border:none; font-size:13px; font-weight:600; cursor:pointer; }
-  .btn-save { background:var(--emerald); color:var(--white); }
-  .btn-cancel { background:#F0F2F6; }
-  .empty { text-align:center; padding:40px; color:#8A93A6; }
+  /* stat cards */
+  .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:24px; }
+  .stat-card { background:var(--white); border-radius:12px; padding:18px 20px; box-shadow:0 4px 16px rgba(11,28,61,0.06); }
+  .stat-card .num { font-family:'Playfair Display',serif; font-size:28px; color:var(--navy); }
+  .stat-card .label { font-size:12px; color:#8A93A6; margin-top:2px; }
+  .stat-card.emerald .num { color:var(--emerald); }
+  .stat-card.gold .num { color:var(--gold); }
 
-  .generate-panel { background:var(--white); border-radius:12px; padding:22px 24px; margin-bottom:24px; box-shadow:0 4px 18px rgba(11,28,61,0.06); }
-  .generate-panel h2 { font-family:'Playfair Display',serif; font-size:16px; margin-bottom:4px; }
-  .generate-panel > p { color:#7A8496; font-size:13px; margin-bottom:16px; }
+  /* panels */
+  .panel { background:var(--white); border-radius:12px; padding:22px 24px; margin-bottom:22px; box-shadow:0 4px 18px rgba(11,28,61,0.06); }
+  .panel h2 { font-family:'Playfair Display',serif; font-size:16px; margin-bottom:4px; }
+  .panel > p.desc { color:#7A8496; font-size:13px; margin-bottom:16px; }
+  .panel-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+  .btn-ghost { background:#F0F2F6; border:none; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; color:#4A5468; white-space:nowrap; }
+  .btn-ghost:hover { background:#E4E8F0; }
+
+  /* topic chips */
+  .chip-group { margin-top:14px; }
+  .chip-group-label { font-size:11px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:#9AA4B4; margin-bottom:8px; }
+  .chip-wrap { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip {
+    background:#F0F4FA; border:1px solid #E2EAF4; color:var(--navy);
+    padding:8px 14px; border-radius:20px; font-size:12.5px; cursor:pointer;
+    transition:background .2s, border-color .2s;
+  }
+  .chip:hover { background:var(--emerald-light); border-color:var(--emerald); }
+  .chip.trending { background:#FDF3E7; border-color:#F0DDB8; }
+  .chip.trending:hover { background:#FBEAD0; }
+  .topics-loading, .topics-empty { font-size:12.5px; color:#9AA4B4; }
+
+  /* generate panel */
   .generate-row { display:flex; gap:10px; }
   .generate-row input { flex:1; padding:11px 14px; border:1px solid #DCE1EA; border-radius:8px; font-size:13px; }
   .generate-row button { padding:11px 20px; background:var(--navy); color:var(--white); border:none; border-radius:8px; font-weight:600; font-size:13px; cursor:pointer; white-space:nowrap; }
@@ -67,12 +86,85 @@
   .generate-status { margin-top:12px; font-size:13px; min-height:18px; }
   .generate-status.error { color:var(--red); }
   .generate-status.success { color:var(--emerald); }
+
+  /* posts table */
+  .toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .toolbar p { color:#7A8496; font-size:13px; }
+  table { width:100%; border-collapse:collapse; background:var(--white); border-radius:12px; overflow:hidden; box-shadow:0 4px 18px rgba(11,28,61,0.06); }
+  th, td { text-align:left; padding:12px 14px; font-size:13px; border-bottom:1px solid #EEF1F6; vertical-align:middle; }
+  th { background:#F0F2F6; font-weight:600; color:#4A5468; font-size:11.5px; text-transform:uppercase; letter-spacing:0.3px; }
+  td.title-cell { max-width:260px; font-weight:500; }
+  .thumb { width:52px; height:38px; object-fit:cover; border-radius:6px; background:#e2e6ec; display:block; }
+  .badge { display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:600; }
+  .badge.pub { background:var(--emerald-light); color:var(--emerald); }
+  .badge.draft { background:#F2F2F2; color:#888; }
+  .badge.seo-good { background:var(--emerald-light); color:var(--emerald); }
+  .badge.seo-warn { background:#FDF3E7; color:#B8842F; }
+  .badge.seo-bad { background:var(--red-light); color:var(--red); }
+  .img-check { font-size:15px; }
+  .row-actions { display:flex; gap:6px; flex-wrap:wrap; }
+  .row-actions button { border:none; background:#F0F2F6; padding:6px 11px; border-radius:6px; font-size:11.5px; cursor:pointer; }
+  .row-actions button:hover { background:#E4E8F0; }
+  .row-actions button.danger { background:var(--red-light); color:var(--red); }
+  .row-actions button.danger:hover { background:#F6D4CF; }
+  .row-actions button.primary { background:var(--emerald); color:var(--white); }
+  .row-actions button.primary:hover { background:#0c7a4f; }
+
+  /* review modal */
+  .modal-bg { display:none; position:fixed; inset:0; background:rgba(11,28,61,0.55); align-items:flex-start; justify-content:center; z-index:200; padding:30px 20px; overflow-y:auto; }
+  .modal { background:var(--white); border-radius:16px; padding:0; width:100%; max-width:880px; overflow:hidden; margin-bottom:40px; }
+  .modal-head { display:flex; justify-content:space-between; align-items:center; padding:20px 26px; border-bottom:1px solid #EEF1F6; }
+  .modal-head h3 { font-family:'Playfair Display',serif; font-size:17px; }
+  .modal-close { background:none; border:none; font-size:20px; cursor:pointer; color:#9AA4B4; line-height:1; }
+  .modal-body { padding:24px 26px; display:grid; grid-template-columns:1fr 1.3fr; gap:26px; }
+  @media (max-width:720px) { .modal-body { grid-template-columns:1fr; } }
+
+  .modal-img-wrap img { width:100%; height:180px; object-fit:cover; border-radius:10px; background:#e2e6ec; }
+  .modal-img-wrap .no-img { width:100%; height:180px; border-radius:10px; background:#F0F2F6; display:flex; align-items:center; justify-content:center; color:#9AA4B4; font-size:13px; }
+  .img-relevance { margin-top:10px; padding:10px 12px; border-radius:8px; font-size:12px; line-height:1.5; }
+  .img-relevance.good { background:var(--emerald-light); color:#0a6b46; }
+  .img-relevance.bad { background:var(--red-light); color:var(--red); }
+  .img-relevance.unchecked { background:#F0F2F6; color:#8A93A6; }
+  #regenImgBtn { width:100%; margin-top:10px; padding:9px; background:#F0F2F6; border:none; border-radius:8px; font-size:12.5px; font-weight:600; cursor:pointer; }
+  #regenImgBtn:hover { background:#E4E8F0; }
+  #regenImgBtn:disabled { opacity:0.6; cursor:default; }
+
+  .seo-list { margin-top:16px; }
+  .seo-list h4 { font-size:11px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:#9AA4B4; margin-bottom:8px; }
+  .seo-item { display:flex; gap:8px; align-items:flex-start; font-size:12px; padding:5px 0; }
+  .seo-icon { flex-shrink:0; }
+  .seo-item .detail { color:#8A93A6; }
+
+  .modal label { display:block; font-size:12px; font-weight:600; color:#5A6578; margin:0 0 6px; }
+  .modal input[type=text], .modal textarea { width:100%; padding:10px 12px; border:1px solid #DCE1EA; border-radius:8px; font-size:13px; font-family:inherit; margin-bottom:14px; }
+  .modal textarea#editContent { min-height:160px; resize:vertical; }
+  .content-preview { border:1px solid #EEF1F6; border-radius:8px; padding:14px 16px; margin-bottom:14px; max-height:220px; overflow-y:auto; font-size:13px; line-height:1.6; }
+  .content-preview h2, .content-preview h3 { font-size:14px; margin:8px 0 4px; }
+  .content-preview p { margin-bottom:8px; }
+  .toggle-edit { font-size:11.5px; color:var(--emerald); cursor:pointer; margin-bottom:8px; display:inline-block; }
+  .author-line { font-size:11.5px; color:#9AA4B4; margin-bottom:14px; }
+  .publish-row { display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+  .publish-row input { width:auto !important; margin:0 !important; }
+
+  .modal-actions { display:flex; gap:10px; justify-content:flex-end; padding:16px 26px; border-top:1px solid #EEF1F6; }
+  .modal-actions button { padding:10px 18px; border-radius:8px; border:none; font-size:13px; font-weight:600; cursor:pointer; }
+  .btn-save { background:var(--emerald); color:var(--white); }
+  .btn-cancel { background:#F0F2F6; }
+  .btn-delete { background:var(--red-light); color:var(--red); margin-right:auto; }
+
+  .empty { text-align:center; padding:40px; color:#8A93A6; }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>VCS Blog Admin</h1>
+  <div class="header-left">
+    <div class="header-mark">VCS</div>
+    <div>
+      <h1>Blog Control Panel</h1>
+      <p>Vardhman Consultancy Services</p>
+    </div>
+  </div>
   <button id="logoutBtn" onclick="logout()">Log Out</button>
 </header>
 
@@ -84,9 +176,30 @@
 </div>
 
 <div id="adminScreen">
-  <div class="generate-panel">
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="num" id="statTotal">-</div><div class="label">Total Posts</div></div>
+    <div class="stat-card emerald"><div class="num" id="statPublished">-</div><div class="label">Published</div></div>
+    <div class="stat-card gold"><div class="num" id="statDraft">-</div><div class="label">Awaiting Review</div></div>
+    <div class="stat-card"><div class="num" id="statWeek">-</div><div class="label">Created This Week</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Hot Topics & Keywords</h2>
+        <p class="desc">Live trending finance headlines and high-intent search phrases — click one to use it below.</p>
+      </div>
+      <button class="btn-ghost" onclick="loadTopics()">↻ Refresh</button>
+    </div>
+    <div id="topicsArea">
+      <div class="topics-loading">Loading suggestions...</div>
+    </div>
+  </div>
+
+  <div class="panel">
     <h2>Generate New Post</h2>
-    <p>Type a topic or keyword — Gemini writes the post and Unsplash finds a matching photo. It's saved as a draft, so review it below before publishing.</p>
+    <p class="desc">Type a topic or click a suggestion above — Gemini writes the post, Unsplash finds a unique photo, and it's checked for image fit + basic SEO. Saved as a draft for your review.</p>
     <div class="generate-row">
       <input type="text" id="genTopic" placeholder="e.g. New GST rules for small businesses in 2026" onkeydown="if(event.key==='Enter') generatePost();"/>
       <button id="genBtn" onclick="generatePost()">Generate</button>
@@ -99,25 +212,51 @@
   </div>
   <table>
     <thead>
-      <tr><th>Title</th><th>Keyword</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+      <tr><th>Image</th><th>Title</th><th>SEO</th><th>Image Fit</th><th>Date</th><th>Status</th><th>Actions</th></tr>
     </thead>
     <tbody id="postsBody"></tbody>
   </table>
 </div>
 
-<div class="modal-bg" id="editModalBg">
+<div class="modal-bg" id="reviewModalBg">
   <div class="modal">
-    <h3>Edit Post</h3>
-    <label>Title</label>
-    <input type="text" id="editTitle"/>
-    <label>Excerpt</label>
-    <textarea id="editExcerpt" style="min-height:70px;"></textarea>
-    <label>Content (HTML)</label>
-    <textarea id="editContent"></textarea>
-    <label>Image URL</label>
-    <input type="text" id="editImageUrl"/>
-    <label><input type="checkbox" id="editPublished" style="width:auto;display:inline-block;margin-right:6px;"/> Published (visible on the site)</label>
+    <div class="modal-head">
+      <h3>Review Post</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="modal-img-wrap" id="modalImgWrap"></div>
+        <div class="img-relevance" id="imgRelevanceBox"></div>
+        <button id="regenImgBtn" onclick="regenerateImage()">↻ Regenerate Image</button>
+
+        <div class="seo-list">
+          <h4>SEO Checklist</h4>
+          <div id="seoList"></div>
+        </div>
+      </div>
+      <div>
+        <label>Title</label>
+        <input type="text" id="editTitle"/>
+        <label>Excerpt / Meta Description</label>
+        <textarea id="editExcerpt" style="min-height:60px;"></textarea>
+        <div class="author-line">By <span id="editAuthor"></span></div>
+
+        <span class="toggle-edit" onclick="toggleContentEdit()" id="toggleEditLabel">Edit raw HTML</span>
+        <div class="content-preview" id="contentPreview"></div>
+        <textarea id="editContent" style="display:none;"></textarea>
+
+        <label style="margin-top:4px;">Image URL</label>
+        <input type="text" id="editImageUrl"/>
+
+        <div class="publish-row">
+          <input type="checkbox" id="editPublished"/>
+          <label style="margin:0;">Published (visible on the site)</label>
+        </div>
+      </div>
+    </div>
     <div class="modal-actions">
+      <button class="btn-delete" onclick="deletePost()">Delete</button>
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
       <button class="btn-save" onclick="saveEdit()">Save Changes</button>
     </div>
@@ -142,6 +281,7 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 let editingId = null;
+let allPosts = [];
 
 function checkSession() {
   auth.onAuthStateChanged(user => {
@@ -177,6 +317,7 @@ function showAdmin() {
   document.getElementById('adminScreen').style.display = 'block';
   document.getElementById('logoutBtn').style.display = 'inline-block';
   loadPosts();
+  loadTopics();
 }
 
 function escapeHtml(str) {
@@ -189,45 +330,51 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
 }
 
-let allPosts = [];
+// ---------- Hot Topics ----------
 
-async function loadPosts() {
-  const body = document.getElementById('postsBody');
-  const countMsg = document.getElementById('countMsg');
-
-  let snapshot;
+async function loadTopics() {
+  const area = document.getElementById('topicsArea');
+  area.innerHTML = '<div class="topics-loading">Loading suggestions...</div>';
   try {
-    snapshot = await db.collection('blogs').orderBy('createdAt', 'desc').get();
+    const idToken = await auth.currentUser.getIdToken();
+    const res = await fetch('/.netlify/functions/suggest-topics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken }),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Could not load suggestions.');
+
+    const trendingHtml = result.trending && result.trending.length
+      ? result.trending.map(t => `<span class="chip trending" onclick="useTopic(this)">🔥 ${escapeHtml(t)}</span>`).join('')
+      : '<span class="topics-empty">No live headlines matched right now — try the keyword ideas below.</span>';
+
+    const keywordsHtml = (result.keywords || []).map(k => `<span class="chip" onclick="useTopic(this)">${escapeHtml(k)}</span>`).join('');
+
+    area.innerHTML = `
+      <div class="chip-group">
+        <div class="chip-group-label">Trending Now</div>
+        <div class="chip-wrap">${trendingHtml}</div>
+      </div>
+      <div class="chip-group">
+        <div class="chip-group-label">High-Intent Keyword Ideas</div>
+        <div class="chip-wrap">${keywordsHtml}</div>
+      </div>
+    `;
   } catch (err) {
-    console.error(err);
-    countMsg.textContent = 'Could not load posts.';
-    return;
+    area.innerHTML = `<div class="topics-empty">${escapeHtml(err.message)}</div>`;
   }
-
-  allPosts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  countMsg.textContent = allPosts.length + ' post(s)';
-
-  if (allPosts.length === 0) {
-    body.innerHTML = '<tr><td colspan="5" class="empty">No blog posts yet. They will appear here once the automated workflow generates one, or you can add posts directly in Firestore.</td></tr>';
-    return;
-  }
-
-  body.innerHTML = allPosts.map(p => `
-    <tr>
-      <td class="title-cell">${escapeHtml(p.title)}</td>
-      <td>${escapeHtml(p.keyword) || '-'}</td>
-      <td>${p.createdAt ? formatDate(p.createdAt.toDate()) : ''}</td>
-      <td><span class="status-pill ${p.published ? 'pub' : 'draft'}">${p.published ? 'Published' : 'Draft'}</span></td>
-      <td>
-        <div class="row-actions">
-          <button onclick="openEdit('${p.id}')">Edit</button>
-          <button onclick="togglePublish('${p.id}', ${p.published})">${p.published ? 'Unpublish' : 'Publish'}</button>
-          <button class="danger" onclick="deletePost('${p.id}')">Delete</button>
-        </div>
-      </td>
-    </tr>
-  `).join('');
 }
+
+function useTopic(el) {
+  const text = el.textContent.replace('🔥 ', '').trim();
+  const input = document.getElementById('genTopic');
+  input.value = text;
+  input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  input.focus();
+}
+
+// ---------- Generate ----------
 
 async function generatePost() {
   const topicEl = document.getElementById('genTopic');
@@ -244,7 +391,7 @@ async function generatePost() {
   btn.disabled = true;
   btn.textContent = 'Generating...';
   statusEl.className = 'generate-status';
-  statusEl.textContent = 'Writing your post — this can take 10-20 seconds...';
+  statusEl.textContent = 'Writing your post, picking a unique photo, and checking SEO — this can take 15-25 seconds...';
 
   try {
     const idToken = await auth.currentUser.getIdToken();
@@ -258,7 +405,7 @@ async function generatePost() {
     if (!res.ok) throw new Error(result.error || 'Generation failed.');
 
     statusEl.className = 'generate-status success';
-    statusEl.textContent = `Draft created: "${result.title}". Find it below and click Publish when you're happy with it.`;
+    statusEl.textContent = `Draft created: "${result.title}". Find it below and review before publishing.`;
     topicEl.value = '';
     loadPosts();
   } catch (err) {
@@ -270,35 +417,212 @@ async function generatePost() {
   }
 }
 
-function openEdit(id) {
+// ---------- Posts table ----------
+
+function renderStats() {
+  const total = allPosts.length;
+  const published = allPosts.filter(p => p.published).length;
+  const draft = total - published;
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const thisWeek = allPosts.filter(p => p.createdAt && p.createdAt.toDate().getTime() >= weekAgo).length;
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statPublished').textContent = published;
+  document.getElementById('statDraft').textContent = draft;
+  document.getElementById('statWeek').textContent = thisWeek;
+}
+
+function seoBadge(seoChecks) {
+  if (!seoChecks) return '<span class="badge draft">—</span>';
+  const passed = seoChecks.filter(c => c.pass).length;
+  const cls = passed === seoChecks.length ? 'seo-good' : passed >= seoChecks.length - 1 ? 'seo-warn' : 'seo-bad';
+  return `<span class="badge ${cls}">${passed}/${seoChecks.length}</span>`;
+}
+
+function imageCheckIcon(post) {
+  if (!post.imageUrl) return '<span class="img-check" title="No image">—</span>';
+  if (!post.imageRelevance) return '<span class="img-check" title="Not checked">❔</span>';
+  return post.imageRelevance.aligned
+    ? '<span class="img-check" title="' + escapeHtml(post.imageRelevance.note || '') + '">✅</span>'
+    : '<span class="img-check" title="' + escapeHtml(post.imageRelevance.note || '') + '">⚠️</span>';
+}
+
+async function loadPosts() {
+  const body = document.getElementById('postsBody');
+  const countMsg = document.getElementById('countMsg');
+
+  let snapshot;
+  try {
+    snapshot = await db.collection('blogs').orderBy('createdAt', 'desc').get();
+  } catch (err) {
+    console.error(err);
+    countMsg.textContent = 'Could not load posts.';
+    return;
+  }
+
+  allPosts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  countMsg.textContent = allPosts.length + ' post(s)';
+  renderStats();
+
+  if (allPosts.length === 0) {
+    body.innerHTML = '<tr><td colspan="7" class="empty">No blog posts yet. Generate one above, or wait for the next automated run.</td></tr>';
+    return;
+  }
+
+  body.innerHTML = allPosts.map(p => `
+    <tr>
+      <td>${p.imageUrl ? `<img class="thumb" src="${escapeHtml(p.imageUrl)}" alt=""/>` : '<div class="thumb"></div>'}</td>
+      <td class="title-cell">${escapeHtml(p.title)}</td>
+      <td>${seoBadge(p.seoChecks)}</td>
+      <td>${imageCheckIcon(p)}</td>
+      <td>${p.createdAt ? formatDate(p.createdAt.toDate()) : ''}</td>
+      <td><span class="badge ${p.published ? 'pub' : 'draft'}">${p.published ? 'Published' : 'Draft'}</span></td>
+      <td>
+        <div class="row-actions">
+          <button onclick="openReview('${p.id}')">Review</button>
+          <button class="primary" onclick="togglePublish('${p.id}', ${p.published})">${p.published ? 'Unpublish' : 'Publish'}</button>
+          <button class="danger" onclick="quickDelete('${p.id}')">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// ---------- Review modal ----------
+
+let contentEditMode = false;
+
+function renderModalImage(post) {
+  const wrap = document.getElementById('modalImgWrap');
+  const relBox = document.getElementById('imgRelevanceBox');
+
+  wrap.innerHTML = post.imageUrl
+    ? `<img src="${escapeHtml(post.imageUrl)}" alt=""/>`
+    : `<div class="no-img">No image</div>`;
+
+  if (!post.imageUrl) {
+    relBox.className = 'img-relevance unchecked';
+    relBox.textContent = 'No image attached to this post.';
+  } else if (!post.imageRelevance) {
+    relBox.className = 'img-relevance unchecked';
+    relBox.textContent = 'Image was not checked against the topic.';
+  } else if (post.imageRelevance.aligned) {
+    relBox.className = 'img-relevance good';
+    relBox.textContent = '✅ Looks relevant — ' + (post.imageRelevance.note || '');
+  } else {
+    relBox.className = 'img-relevance bad';
+    relBox.textContent = '⚠️ May not match the topic — ' + (post.imageRelevance.note || '');
+  }
+}
+
+function renderSeoList(seoChecks) {
+  const list = document.getElementById('seoList');
+  if (!seoChecks) {
+    list.innerHTML = '<div class="seo-item">Not evaluated for this post.</div>';
+    return;
+  }
+  list.innerHTML = seoChecks.map(c => `
+    <div class="seo-item">
+      <span class="seo-icon">${c.pass ? '✅' : '⚠️'}</span>
+      <span>${escapeHtml(c.label)} — <span class="detail">${escapeHtml(c.detail)}</span></span>
+    </div>
+  `).join('');
+}
+
+function toggleContentEdit() {
+  contentEditMode = !contentEditMode;
+  document.getElementById('contentPreview').style.display = contentEditMode ? 'none' : 'block';
+  document.getElementById('editContent').style.display = contentEditMode ? 'block' : 'none';
+  document.getElementById('toggleEditLabel').textContent = contentEditMode ? 'Preview rendered content' : 'Edit raw HTML';
+  if (!contentEditMode) {
+    document.getElementById('contentPreview').innerHTML = document.getElementById('editContent').value;
+  }
+}
+
+function openReview(id) {
   const post = allPosts.find(p => p.id === id);
   if (!post) return;
   editingId = id;
+  contentEditMode = false;
+
   document.getElementById('editTitle').value = post.title || '';
   document.getElementById('editExcerpt').value = post.excerpt || '';
   document.getElementById('editContent').value = post.content || '';
+  document.getElementById('editContent').style.display = 'none';
+  document.getElementById('contentPreview').style.display = 'block';
+  document.getElementById('contentPreview').innerHTML = post.content || '';
+  document.getElementById('toggleEditLabel').textContent = 'Edit raw HTML';
   document.getElementById('editImageUrl').value = post.imageUrl || '';
+  document.getElementById('editAuthor').textContent = post.author || 'VCS Advisory Team';
   document.getElementById('editPublished').checked = !!post.published;
-  document.getElementById('editModalBg').style.display = 'flex';
+
+  renderModalImage(post);
+  renderSeoList(post.seoChecks);
+
+  document.getElementById('reviewModalBg').style.display = 'flex';
 }
 
 function closeModal() {
-  document.getElementById('editModalBg').style.display = 'none';
+  document.getElementById('reviewModalBg').style.display = 'none';
   editingId = null;
+}
+
+async function regenerateImage() {
+  const post = allPosts.find(p => p.id === editingId);
+  if (!post) return;
+  const btn = document.getElementById('regenImgBtn');
+  btn.disabled = true;
+  btn.textContent = 'Finding a new image...';
+
+  try {
+    const idToken = await auth.currentUser.getIdToken();
+    const res = await fetch('/.netlify/functions/regenerate-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug: editingId, imageQuery: post.keyword || post.title, idToken }),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Could not regenerate image.');
+
+    document.getElementById('editImageUrl').value = result.image.url;
+    const updatedPost = { ...post, imageUrl: result.image.url, imageRelevance: result.imageRelevance };
+    renderModalImage(updatedPost);
+    // keep local cache in sync until the table reloads
+    Object.assign(post, { imageUrl: result.image.url, imageCreditName: result.image.creditName, imageCreditUrl: result.image.creditUrl, imageRelevance: result.imageRelevance });
+  } catch (err) {
+    alert(err.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '↻ Regenerate Image';
+  }
 }
 
 async function saveEdit() {
   if (!editingId) return;
+  const content = contentEditMode ? document.getElementById('editContent').value : document.getElementById('contentPreview').innerHTML;
   try {
     await db.collection('blogs').doc(editingId).update({
       title: document.getElementById('editTitle').value.trim(),
       excerpt: document.getElementById('editExcerpt').value.trim(),
-      content: document.getElementById('editContent').value,
+      content: content,
       imageUrl: document.getElementById('editImageUrl').value.trim(),
       published: document.getElementById('editPublished').checked,
     });
   } catch (err) {
     alert('Save failed: ' + err.message);
+    return;
+  }
+  closeModal();
+  loadPosts();
+}
+
+async function deletePost() {
+  if (!editingId) return;
+  if (!confirm('Delete this post permanently?')) return;
+  try {
+    await db.collection('blogs').doc(editingId).delete();
+  } catch (err) {
+    alert('Delete failed: ' + err.message);
     return;
   }
   closeModal();
@@ -315,7 +639,7 @@ async function togglePublish(id, currentlyPublished) {
   loadPosts();
 }
 
-async function deletePost(id) {
+async function quickDelete(id) {
   if (!confirm('Delete this post permanently?')) return;
   try {
     await db.collection('blogs').doc(id).delete();

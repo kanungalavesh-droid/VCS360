@@ -1,9 +1,14 @@
 // Scheduled blog generator: pulls a real trending finance headline from RSS,
-// asks Gemini to write a post about it, fetches a matching Unsplash photo,
-// and saves it to Firestore as a DRAFT (published: false) for manual review
-// in admin.html. Runs in GitHub Actions (see .github/workflows/generate-blog.yml).
+// asks Gemini to write a post about it, fetches a unique matching Unsplash
+// photo, checks the image against the topic with Gemini vision, runs a basic
+// SEO checklist, and saves it to Firestore as a DRAFT (published: false) for
+// manual review in admin.html. Runs in GitHub Actions
+// (see .github/workflows/generate-blog.yml).
 
-import { fetchTrendingHeadline, generatePost, fetchUnsplashImage, insertBlog } from './blog-generator-core.mjs';
+import {
+  fetchTrendingHeadline, generatePost, fetchUnsplashImage, checkImageRelevance,
+  computeSeoChecks, getUsedImageUrls, insertBlog,
+} from './blog-generator-core.mjs';
 
 async function main() {
   console.log('Fetching trending headline...');
@@ -13,11 +18,17 @@ async function main() {
   console.log('Generating post with Gemini...');
   const post = await generatePost(headline);
 
-  console.log('Fetching image for:', post.image_query);
-  const image = await fetchUnsplashImage(post.image_query);
+  console.log('Fetching a unique image for:', post.image_query);
+  const usedUrls = await getUsedImageUrls();
+  const image = await fetchUnsplashImage(post.image_query, usedUrls);
+
+  console.log('Checking image relevance...');
+  const imageRelevance = image ? await checkImageRelevance(image.url, post.title, post.excerpt) : null;
+
+  const seoChecks = computeSeoChecks(post, headline);
 
   console.log('Saving to Firestore as draft...');
-  const result = await insertBlog(post, image, headline, false);
+  const result = await insertBlog({ post, image, topic: headline, published: false, seoChecks, imageRelevance });
 
   console.log('Blog post created (draft):', result.title, '(' + result.slug + ')');
 }
