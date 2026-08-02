@@ -41,6 +41,7 @@ const SERVICE_KEYWORDS = [
   'tax', 'gst', 'itr', 'income tax', 'loan', 'emi', 'invest', 'mutual fund',
   'insurance', 'startup', 'msme', 'compliance', 'rbi', 'budget', 'bank',
   'credit', 'ipo', 'stock market', 'gold', 'real estate', 'property', 'finance',
+  'legal', 'law', 'contract', 'registration',
 ];
 
 const FALLBACK_TOPICS = [
@@ -49,7 +50,7 @@ const FALLBACK_TOPICS = [
   'How to choose the right business loan for your company',
   'Mutual funds vs fixed deposits: where should you invest this year',
   'Term insurance vs whole life insurance: which one do you actually need',
-  'Virtual CFO services: when does a growing business need one',
+  'Legal documents every small business owner should have in place',
   'How RBI repo rate changes affect your home loan EMI',
 ];
 
@@ -63,7 +64,7 @@ export const HIGH_INTENT_KEYWORDS = [
   'Personal loan vs business loan interest rates compared',
   'How to get a business loan with no collateral',
   'Term insurance vs whole life insurance which is better',
-  'Virtual CFO services cost and benefits for startups',
+  'Legal advisory for startups: what founders often overlook',
   'Mutual funds vs fixed deposit returns comparison',
   'GST late filing penalty and how to avoid it',
   'How to save capital gains tax on property sale',
@@ -120,7 +121,7 @@ export async function fetchTrendingHeadline() {
 export async function generatePost(topic) {
   if (!GEMINI_API_KEY) throw new Error('Missing GEMINI_API_KEY env var.');
 
-  const systemInstruction = `You are a content writer for Vardhman Consultancy Services (VCS), an Indian financial consultancy based in Vapi, Gujarat, serving clients across India. VCS offers: Taxation & ITR filing, GST & Compliance, Business Loans & Finance, Investments & Wealth Management, Insurance Advisory, Business Advisory, and Virtual CFO services. Write clear, accurate, SEO-friendly blog posts in simple English for individuals and small business owners. You may naturally mention relevant VCS services where genuinely relevant, without being overly promotional. Output must be valid JSON matching the given schema only — no extra commentary.`;
+  const systemInstruction = `You are a content writer for Vardhman Consultancy Services (VCS), an Indian financial consultancy based in Vapi, Gujarat, serving clients across India. VCS offers: Taxation & ITR filing, GST & Compliance, Business Loans & Finance, Investments & Wealth Management, Insurance Advisory, Business Advisory, and Legal Advisory services. Write clear, accurate, SEO-friendly blog posts in simple English for individuals and small business owners. You may naturally mention relevant VCS services where genuinely relevant, without being overly promotional. Output must be valid JSON matching the given schema only — no extra commentary.`;
 
   const userPrompt = `Write a blog post about: "${topic}". Make it educational and practical for Indian readers.
 Requirements:
