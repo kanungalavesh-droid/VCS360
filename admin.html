@@ -44,6 +44,12 @@
   #adminScreen { display:none; max-width:1140px; margin:0 auto; padding:28px 24px 60px; }
 
   /* stat cards */
+  .tab-bar { display:flex; gap:8px; margin-bottom:22px; border-bottom:1px solid #E4E8F0; }
+  .tab-btn { background:none; border:none; padding:12px 18px; font-size:14px; font-weight:600; color:#8A93A6; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; }
+  .tab-btn.active { color:var(--navy); border-bottom-color:var(--emerald); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
   .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px; margin-bottom:24px; }
   .stat-card { background:var(--white); border-radius:12px; padding:18px 20px; box-shadow:0 4px 16px rgba(11,28,61,0.06); }
   .stat-card .num { font-family:'Playfair Display',serif; font-size:28px; color:var(--navy); }
@@ -96,6 +102,10 @@
   .badge.seo-good { background:var(--emerald-light); color:var(--emerald); }
   .badge.seo-warn { background:#FDF3E7; color:#B8842F; }
   .badge.seo-bad { background:var(--red-light); color:var(--red); }
+  .badge.lead-new { background:#FDF3E7; color:#B8842F; }
+  .badge.lead-contacted { background:var(--emerald-light); color:var(--emerald); }
+  .badge.lead-closed { background:#F2F2F2; color:#888; }
+  select.status-select { border:1px solid #DCE1EA; border-radius:6px; padding:4px 8px; font-size:11.5px; background:var(--white); }
   .img-check { font-size:15px; }
   .row-actions { display:flex; gap:6px; flex-wrap:wrap; }
   .row-actions button { border:none; background:#F0F2F6; padding:6px 11px; border-radius:6px; font-size:11.5px; cursor:pointer; }
@@ -172,45 +182,71 @@
 
 <div id="adminScreen">
 
-  <div class="stats-row">
-    <div class="stat-card"><div class="num" id="statTotal">-</div><div class="label">Total Posts</div></div>
-    <div class="stat-card emerald"><div class="num" id="statPublished">-</div><div class="label">Published</div></div>
-    <div class="stat-card gold"><div class="num" id="statDraft">-</div><div class="label">Awaiting Review</div></div>
-    <div class="stat-card"><div class="num" id="statWeek">-</div><div class="label">Created This Week</div></div>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tabBtnBlog" onclick="switchTab('blog')">📝 Blog Posts</button>
+    <button class="tab-btn" id="tabBtnLeads" onclick="switchTab('leads')">📞 Leads</button>
   </div>
 
-  <div class="panel">
-    <div class="panel-head">
-      <div>
-        <h2>Hot Topics & Keywords</h2>
-        <p class="desc">Live trending finance headlines and high-intent search phrases — click one to use it below.</p>
+  <div class="tab-panel active" id="tabBlog">
+    <div class="stats-row">
+      <div class="stat-card"><div class="num" id="statTotal">-</div><div class="label">Total Posts</div></div>
+      <div class="stat-card emerald"><div class="num" id="statPublished">-</div><div class="label">Published</div></div>
+      <div class="stat-card gold"><div class="num" id="statDraft">-</div><div class="label">Awaiting Review</div></div>
+      <div class="stat-card"><div class="num" id="statWeek">-</div><div class="label">Created This Week</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Hot Topics & Keywords</h2>
+          <p class="desc">Live trending finance headlines and high-intent search phrases — click one to use it below.</p>
+        </div>
+        <button class="btn-ghost" onclick="loadTopics()">↻ Refresh</button>
       </div>
-      <button class="btn-ghost" onclick="loadTopics()">↻ Refresh</button>
+      <div id="topicsArea">
+        <div class="topics-loading">Loading suggestions...</div>
+      </div>
     </div>
-    <div id="topicsArea">
-      <div class="topics-loading">Loading suggestions...</div>
+
+    <div class="panel">
+      <h2>Generate New Post</h2>
+      <p class="desc">Type a topic or click a suggestion above — Gemini writes the post, Unsplash finds a unique photo, and it's checked for image fit + basic SEO. Saved as a draft for your review.</p>
+      <div class="generate-row">
+        <input type="text" id="genTopic" placeholder="e.g. New GST rules for small businesses in 2026" onkeydown="if(event.key==='Enter') generatePost();"/>
+        <button id="genBtn" onclick="generatePost()">Generate</button>
+      </div>
+      <div class="generate-status" id="genStatus"></div>
     </div>
+
+    <div class="toolbar">
+      <p id="countMsg">Loading posts...</p>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Image</th><th>Title</th><th>SEO</th><th>Image Fit</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody id="postsBody"></tbody>
+    </table>
   </div>
 
-  <div class="panel">
-    <h2>Generate New Post</h2>
-    <p class="desc">Type a topic or click a suggestion above — Gemini writes the post, Unsplash finds a unique photo, and it's checked for image fit + basic SEO. Saved as a draft for your review.</p>
-    <div class="generate-row">
-      <input type="text" id="genTopic" placeholder="e.g. New GST rules for small businesses in 2026" onkeydown="if(event.key==='Enter') generatePost();"/>
-      <button id="genBtn" onclick="generatePost()">Generate</button>
+  <div class="tab-panel" id="tabLeads">
+    <div class="stats-row">
+      <div class="stat-card"><div class="num" id="leadStatTotal">-</div><div class="label">Total Leads</div></div>
+      <div class="stat-card gold"><div class="num" id="leadStatNew">-</div><div class="label">New / Uncontacted</div></div>
+      <div class="stat-card emerald"><div class="num" id="leadStatContacted">-</div><div class="label">Contacted</div></div>
+      <div class="stat-card"><div class="num" id="leadStatWeek">-</div><div class="label">This Week</div></div>
     </div>
-    <div class="generate-status" id="genStatus"></div>
-  </div>
 
-  <div class="toolbar">
-    <p id="countMsg">Loading posts...</p>
+    <div class="toolbar">
+      <p id="leadCountMsg">Loading leads...</p>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Contact</th><th>City</th><th>Service</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody id="leadsBody"></tbody>
+    </table>
   </div>
-  <table>
-    <thead>
-      <tr><th>Image</th><th>Title</th><th>SEO</th><th>Image Fit</th><th>Date</th><th>Status</th><th>Actions</th></tr>
-    </thead>
-    <tbody id="postsBody"></tbody>
-  </table>
 </div>
 
 <div class="modal-bg" id="reviewModalBg">
@@ -313,6 +349,19 @@ function showAdmin() {
   document.getElementById('logoutBtn').style.display = 'inline-block';
   loadPosts();
   loadTopics();
+}
+
+let leadsLoaded = false;
+
+function switchTab(tab) {
+  document.getElementById('tabBtnBlog').classList.toggle('active', tab === 'blog');
+  document.getElementById('tabBtnLeads').classList.toggle('active', tab === 'leads');
+  document.getElementById('tabBlog').classList.toggle('active', tab === 'blog');
+  document.getElementById('tabLeads').classList.toggle('active', tab === 'leads');
+  if (tab === 'leads' && !leadsLoaded) {
+    leadsLoaded = true;
+    loadLeads();
+  }
 }
 
 function escapeHtml(str) {
@@ -642,6 +691,100 @@ async function quickDelete(id) {
     return;
   }
   loadPosts();
+}
+
+// ---------- Leads ----------
+
+let allLeads = [];
+
+function leadStatusBadge(status) {
+  const s = status || 'new';
+  const label = s === 'contacted' ? 'Contacted' : s === 'closed' ? 'Closed' : 'New';
+  return `<span class="badge lead-${s === 'contacted' ? 'contacted' : s === 'closed' ? 'closed' : 'new'}">${label}</span>`;
+}
+
+function renderLeadStats() {
+  const total = allLeads.length;
+  const contacted = allLeads.filter(l => l.status === 'contacted').length;
+  const closed = allLeads.filter(l => l.status === 'closed').length;
+  const newCount = total - contacted - closed;
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const thisWeek = allLeads.filter(l => l.createdAt && l.createdAt.toDate().getTime() >= weekAgo).length;
+
+  document.getElementById('leadStatTotal').textContent = total;
+  document.getElementById('leadStatNew').textContent = newCount;
+  document.getElementById('leadStatContacted').textContent = contacted;
+  document.getElementById('leadStatWeek').textContent = thisWeek;
+}
+
+async function loadLeads() {
+  const body = document.getElementById('leadsBody');
+  const countMsg = document.getElementById('leadCountMsg');
+
+  let snapshot;
+  try {
+    snapshot = await db.collection('leads').orderBy('createdAt', 'desc').get();
+  } catch (err) {
+    console.error(err);
+    countMsg.textContent = 'Could not load leads.';
+    return;
+  }
+
+  allLeads = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  countMsg.textContent = allLeads.length + ' lead(s)';
+  renderLeadStats();
+
+  if (allLeads.length === 0) {
+    body.innerHTML = '<tr><td colspan="8" class="empty">No leads submitted yet. They\'ll show up here as soon as someone fills out the contact form on the site.</td></tr>';
+    return;
+  }
+
+  body.innerHTML = allLeads.map(l => `
+    <tr>
+      <td class="title-cell">${escapeHtml(l.name)}</td>
+      <td>
+        ${l.phone ? `<a href="tel:${escapeHtml(l.phone)}">${escapeHtml(l.phone)}</a><br/>` : ''}
+        ${l.phone ? `<a href="https://wa.me/91${escapeHtml((l.phone || '').replace(/\D/g,''))}" target="_blank" style="color:#25D366;">WhatsApp</a>` : ''}
+        ${l.email ? `<br/><span style="color:#8A93A6;">${escapeHtml(l.email)}</span>` : ''}
+      </td>
+      <td>${escapeHtml(l.city) || '-'}</td>
+      <td>${escapeHtml(l.service) || '-'}</td>
+      <td style="max-width:200px;color:#5A6578;">${escapeHtml(l.message) || '-'}</td>
+      <td>${l.createdAt ? formatDate(l.createdAt.toDate()) : ''}</td>
+      <td>${leadStatusBadge(l.status)}</td>
+      <td>
+        <div class="row-actions">
+          <select class="status-select" onchange="setLeadStatus('${l.id}', this.value)">
+            <option value="new" ${!l.status || l.status === 'new' ? 'selected' : ''}>New</option>
+            <option value="contacted" ${l.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+            <option value="closed" ${l.status === 'closed' ? 'selected' : ''}>Closed</option>
+          </select>
+          <button class="danger" onclick="deleteLead('${l.id}')">Delete</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function setLeadStatus(id, status) {
+  try {
+    await db.collection('leads').doc(id).update({ status });
+  } catch (err) {
+    alert('Update failed: ' + err.message);
+    return;
+  }
+  loadLeads();
+}
+
+async function deleteLead(id) {
+  if (!confirm('Delete this lead permanently?')) return;
+  try {
+    await db.collection('leads').doc(id).delete();
+  } catch (err) {
+    alert('Delete failed: ' + err.message);
+    return;
+  }
+  loadLeads();
 }
 
 checkSession();

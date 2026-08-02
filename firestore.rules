@@ -12,15 +12,15 @@ service cloud.firestore {
         ];
     }
 
-    // Public lead form: anyone can submit a lead, nobody can read/edit/delete
-    // them from the client. View leads via the Firebase console instead.
+    // Public lead form: anyone can submit a lead. Only the whitelisted admin
+    // can read/update (e.g. mark contacted)/delete them, via admin.html.
     match /leads/{leadId} {
       allow create: if request.resource.data.keys().hasAll(['name', 'phone'])
                     && request.resource.data.name is string
                     && request.resource.data.name.size() > 0
                     && request.resource.data.phone is string
                     && request.resource.data.phone.size() > 0;
-      allow read, update, delete: if false;
+      allow read, update, delete: if isAdminEmail();
     }
 
     // Blog posts: public can read published posts only. Full read/write
