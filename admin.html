@@ -371,6 +371,8 @@ function useTopic(el) {
 
 // ---------- Generate ----------
 
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
 async function generatePost() {
   const topicEl = document.getElementById('genTopic');
   const btn = document.getElementById('genBtn');
@@ -386,30 +388,45 @@ async function generatePost() {
   btn.disabled = true;
   btn.textContent = 'Generating...';
   statusEl.className = 'generate-status';
-  statusEl.textContent = 'Writing your post, picking a unique photo, and checking SEO — this can take 15-25 seconds...';
+  statusEl.textContent = 'Writing your post, generating an image, and checking SEO — this runs in the background and can take up to a minute. This box will update automatically.';
+
+  const countBefore = allPosts.length;
 
   try {
     const idToken = await auth.currentUser.getIdToken();
-    const res = await fetch('/.netlify/functions/generate-blog', {
+    // This is a Netlify background function — it always responds
+    // immediately (202) and keeps working after that, so we poll for the
+    // new draft to show up instead of waiting on this response.
+    await fetch('/.netlify/functions/generate-blog-background', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ topic, idToken }),
     });
-    const result = await res.json();
-
-    if (!res.ok) throw new Error(result.error || 'Generation failed.');
-
-    statusEl.className = 'generate-status success';
-    statusEl.textContent = `Draft created: "${result.title}". Find it below and review before publishing.`;
-    topicEl.value = '';
-    loadPosts();
   } catch (err) {
     statusEl.className = 'generate-status error';
-    statusEl.textContent = err.message;
-  } finally {
+    statusEl.textContent = 'Could not reach the server: ' + err.message;
     btn.disabled = false;
     btn.textContent = 'Generate';
+    return;
   }
+
+  for (let attempt = 0; attempt < 18; attempt++) {
+    await sleep(5000);
+    await loadPosts();
+    if (allPosts.length > countBefore) {
+      statusEl.className = 'generate-status success';
+      statusEl.textContent = `Draft created: "${allPosts[0].title}". Find it below and review before publishing.`;
+      topicEl.value = '';
+      btn.disabled = false;
+      btn.textContent = 'Generate';
+      return;
+    }
+  }
+
+  statusEl.className = 'generate-status error';
+  statusEl.textContent = "Still hasn't shown up after 90 seconds — something may have gone wrong. Check the Netlify function logs, or just try again.";
+  btn.disabled = false;
+  btn.textContent = 'Generate';
 }
 
 // ---------- Posts table ----------
@@ -570,31 +587,50 @@ function closeModal() {
 async function regenerateImage() {
   const post = allPosts.find(p => p.id === editingId);
   if (!post) return;
+  const slug = editingId;
+  const oldUrl = post.imageUrl;
   const btn = document.getElementById('regenImgBtn');
   btn.disabled = true;
-  btn.textContent = 'Finding a new image...';
+  btn.textContent = 'Finding a new image (up to a minute)...';
 
   try {
     const idToken = await auth.currentUser.getIdToken();
-    const res = await fetch('/.netlify/functions/regenerate-image', {
+    // Background function — responds immediately, keeps working after.
+    // We poll the post's own doc for imageUrl to change.
+    await fetch('/.netlify/functions/regenerate-image-background', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slug: editingId, imageQuery: post.keyword || post.title, idToken }),
+      body: JSON.stringify({ slug, imageQuery: post.keyword || post.title, idToken }),
     });
-    const result = await res.json();
-    if (!res.ok) throw new Error(result.error || 'Could not regenerate image.');
-
-    document.getElementById('editImageUrl').value = result.image.url;
-    const updatedPost = { ...post, imageUrl: result.image.url, imageSource: result.image.source, imageRelevance: result.imageRelevance };
-    renderModalImage(updatedPost);
-    // keep local cache in sync until the table reloads
-    Object.assign(post, { imageUrl: result.image.url, imageCreditName: result.image.creditName, imageCreditUrl: result.image.creditUrl, imageSource: result.image.source, imageRelevance: result.imageRelevance });
   } catch (err) {
-    alert(err.message);
-  } finally {
+    alert('Could not reach the server: ' + err.message);
     btn.disabled = false;
     btn.textContent = '↻ Regenerate Image';
+    return;
   }
+
+  for (let attempt = 0; attempt < 18; attempt++) {
+    await sleep(5000);
+    let doc;
+    try {
+      doc = await db.collection('blogs').doc(slug).get();
+    } catch {
+      continue;
+    }
+    const data = doc.data();
+    if (data && data.imageUrl && data.imageUrl !== oldUrl) {
+      document.getElementById('editImageUrl').value = data.imageUrl;
+      Object.assign(post, data);
+      renderModalImage(post);
+      btn.disabled = false;
+      btn.textContent = '↻ Regenerate Image';
+      return;
+    }
+  }
+
+  alert("Still hasn't updated after 90 seconds — something may have gone wrong. Check the Netlify function logs, or try again.");
+  btn.disabled = false;
+  btn.textContent = '↻ Regenerate Image';
 }
 
 async function saveEdit() {
