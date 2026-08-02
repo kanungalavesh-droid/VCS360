@@ -371,8 +371,6 @@ function useTopic(el) {
 
 // ---------- Generate ----------
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
 async function generatePost() {
   const topicEl = document.getElementById('genTopic');
   const btn = document.getElementById('genBtn');
@@ -388,45 +386,30 @@ async function generatePost() {
   btn.disabled = true;
   btn.textContent = 'Generating...';
   statusEl.className = 'generate-status';
-  statusEl.textContent = 'Writing your post, generating an image, and checking SEO — this runs in the background and can take up to a minute. This box will update automatically.';
-
-  const countBefore = allPosts.length;
+  statusEl.textContent = 'Writing your post, picking a unique photo, and checking SEO — this can take 15-25 seconds...';
 
   try {
     const idToken = await auth.currentUser.getIdToken();
-    // This is a Netlify background function — it always responds
-    // immediately (202) and keeps working after that, so we poll for the
-    // new draft to show up instead of waiting on this response.
-    await fetch('/.netlify/functions/generate-blog-background', {
+    const res = await fetch('/.netlify/functions/generate-blog', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ topic, idToken }),
     });
+    const result = await res.json();
+
+    if (!res.ok) throw new Error(result.error || 'Generation failed.');
+
+    statusEl.className = 'generate-status success';
+    statusEl.textContent = `Draft created: "${result.title}". Find it below and review before publishing.`;
+    topicEl.value = '';
+    loadPosts();
   } catch (err) {
     statusEl.className = 'generate-status error';
-    statusEl.textContent = 'Could not reach the server: ' + err.message;
+    statusEl.textContent = err.message;
+  } finally {
     btn.disabled = false;
     btn.textContent = 'Generate';
-    return;
   }
-
-  for (let attempt = 0; attempt < 18; attempt++) {
-    await sleep(5000);
-    await loadPosts();
-    if (allPosts.length > countBefore) {
-      statusEl.className = 'generate-status success';
-      statusEl.textContent = `Draft created: "${allPosts[0].title}". Find it below and review before publishing.`;
-      topicEl.value = '';
-      btn.disabled = false;
-      btn.textContent = 'Generate';
-      return;
-    }
-  }
-
-  statusEl.className = 'generate-status error';
-  statusEl.textContent = "Still hasn't shown up after 90 seconds — something may have gone wrong. Check the Netlify function logs, or just try again.";
-  btn.disabled = false;
-  btn.textContent = 'Generate';
 }
 
 // ---------- Posts table ----------
@@ -453,7 +436,6 @@ function seoBadge(seoChecks) {
 
 function imageCheckIcon(post) {
   if (!post.imageUrl) return '<span class="img-check" title="No image">—</span>';
-  if (post.imageSource === 'pollinations' || post.imageSource === 'gemini') return '<span class="img-check" title="AI-generated for this topic">✨</span>';
   if (!post.imageRelevance) return '<span class="img-check" title="Not checked">❔</span>';
   return post.imageRelevance.aligned
     ? '<span class="img-check" title="' + escapeHtml(post.imageRelevance.note || '') + '">✅</span>'
@@ -508,20 +490,13 @@ let contentEditMode = false;
 function renderModalImage(post) {
   const wrap = document.getElementById('modalImgWrap');
   const relBox = document.getElementById('imgRelevanceBox');
-  const sourceLabel = post.imageSource === 'pollinations' ? '✨ AI Generated (Pollinations)'
-    : post.imageSource === 'gemini' ? '✨ AI Generated (Gemini)'
-    : post.imageSource === 'unsplash' ? '📷 Unsplash' : '';
-
   wrap.innerHTML = post.imageUrl
-    ? `<img src="${escapeHtml(post.imageUrl)}" alt=""/>${sourceLabel ? `<div style="text-align:center;font-size:11px;color:#9AA4B4;margin-top:6px;">${sourceLabel}</div>` : ''}`
+    ? `<img src="${escapeHtml(post.imageUrl)}" alt=""/>`
     : `<div class="no-img">No image</div>`;
 
   if (!post.imageUrl) {
     relBox.className = 'img-relevance unchecked';
     relBox.textContent = 'No image attached to this post.';
-  } else if (post.imageSource === 'pollinations' || post.imageSource === 'gemini') {
-    relBox.className = 'img-relevance good';
-    relBox.textContent = '✅ Generated specifically for this topic — no relevance check needed.';
   } else if (!post.imageRelevance) {
     relBox.className = 'img-relevance unchecked';
     relBox.textContent = 'Image was not checked against the topic.';
@@ -589,50 +564,31 @@ function closeModal() {
 async function regenerateImage() {
   const post = allPosts.find(p => p.id === editingId);
   if (!post) return;
-  const slug = editingId;
-  const oldUrl = post.imageUrl;
   const btn = document.getElementById('regenImgBtn');
   btn.disabled = true;
-  btn.textContent = 'Finding a new image (up to a minute)...';
+  btn.textContent = 'Finding a new image...';
 
   try {
     const idToken = await auth.currentUser.getIdToken();
-    // Background function — responds immediately, keeps working after.
-    // We poll the post's own doc for imageUrl to change.
-    await fetch('/.netlify/functions/regenerate-image-background', {
+    const res = await fetch('/.netlify/functions/regenerate-image', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slug, imageQuery: post.keyword || post.title, idToken }),
+      body: JSON.stringify({ slug: editingId, imageQuery: post.keyword || post.title, idToken }),
     });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Could not regenerate image.');
+
+    document.getElementById('editImageUrl').value = result.image.url;
+    const updatedPost = { ...post, imageUrl: result.image.url, imageSource: result.image.source, imageRelevance: result.imageRelevance };
+    renderModalImage(updatedPost);
+    // keep local cache in sync until the table reloads
+    Object.assign(post, { imageUrl: result.image.url, imageCreditName: result.image.creditName, imageCreditUrl: result.image.creditUrl, imageSource: result.image.source, imageRelevance: result.imageRelevance });
   } catch (err) {
-    alert('Could not reach the server: ' + err.message);
+    alert(err.message);
+  } finally {
     btn.disabled = false;
     btn.textContent = '↻ Regenerate Image';
-    return;
   }
-
-  for (let attempt = 0; attempt < 18; attempt++) {
-    await sleep(5000);
-    let doc;
-    try {
-      doc = await db.collection('blogs').doc(slug).get();
-    } catch {
-      continue;
-    }
-    const data = doc.data();
-    if (data && data.imageUrl && data.imageUrl !== oldUrl) {
-      document.getElementById('editImageUrl').value = data.imageUrl;
-      Object.assign(post, data);
-      renderModalImage(post);
-      btn.disabled = false;
-      btn.textContent = '↻ Regenerate Image';
-      return;
-    }
-  }
-
-  alert("Still hasn't updated after 90 seconds — something may have gone wrong. Check the Netlify function logs, or try again.");
-  btn.disabled = false;
-  btn.textContent = '↻ Regenerate Image';
 }
 
 async function saveEdit() {

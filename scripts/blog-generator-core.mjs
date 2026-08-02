@@ -8,11 +8,8 @@ import admin from 'firebase-admin';
 const {
   GEMINI_API_KEY,
   GEMINI_MODEL = 'gemini-flash-latest',
-  GEMINI_IMAGE_MODEL = 'gemini-2.5-flash-image',
   UNSPLASH_ACCESS_KEY,
   FIREBASE_SERVICE_ACCOUNT,
-  GITHUB_TOKEN,
-  GITHUB_REPO = 'kanungalavesh-droid/VCS360',
 } = process.env;
 
 export const AUTHOR_NAME = 'VCS Advisory Team';
@@ -211,135 +208,10 @@ export async function fetchUnsplashImage(query, excludeUrls = []) {
   }
 }
 
-// Free, no-signup image generation (wraps open models like Flux). This is
-// the primary image source since Gemini's image model requires a paid
-// Google Cloud plan (confirmed via a 429 "limit: 0" free-tier response).
-export async function generateImageWithPollinations(prompt) {
-  try {
-    const seed = Math.floor(Math.random() * 1e9);
-    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&seed=${seed}`;
-    const res = await fetch(url, { signal: AbortSignal.timeout(45000) });
-
-    if (!res.ok) {
-      console.warn(`Pollinations image generation failed ${res.status}: ${(await res.text().catch(() => '')).slice(0, 300)}`);
-      return null;
-    }
-
-    const contentType = (res.headers.get('content-type') || '').split(';')[0];
-    if (!contentType.startsWith('image/')) {
-      console.warn('Pollinations returned non-image content-type: ' + contentType);
-      return null;
-    }
-
-    return { buffer: Buffer.from(await res.arrayBuffer()), mimeType: contentType };
-  } catch (err) {
-    console.warn('Pollinations image generation error: ' + err.message);
-    return null;
-  }
-}
-
-// Asks Gemini to generate an original cover image for the post. Returns raw
-// image bytes, or null on any failure (wrong/unavailable model, quota, etc.)
-// — the caller falls back further in that case, so this never breaks
-// generation, it just quietly degrades. Currently expected to fail on the
-// free tier (limit: 0) — kept as a secondary attempt in case billing is
-// enabled later, at which point this starts working with no code changes.
-export async function generateImageWithGemini(prompt) {
-  if (!GEMINI_API_KEY) return null;
-  try {
-    const body = {
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig: { responseModalities: ['IMAGE'] },
-    };
-
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_IMAGE_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
-      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(45000) }
-    );
-
-    if (!res.ok) {
-      console.warn(`Gemini image generation failed ${res.status}: ${await res.text()}`);
-      return null;
-    }
-
-    const json = await res.json();
-    const parts = json.candidates?.[0]?.content?.parts || [];
-    const imgPart = parts.find(p => p.inlineData);
-    if (!imgPart) {
-      console.warn('Gemini image generation returned no image data: ' + JSON.stringify(json).slice(0, 300));
-      return null;
-    }
-
-    return {
-      buffer: Buffer.from(imgPart.inlineData.data, 'base64'),
-      mimeType: imgPart.inlineData.mimeType || 'image/png',
-    };
-  } catch (err) {
-    console.warn('Gemini image generation error: ' + err.message);
-    return null;
-  }
-}
-
-// Commits generated image bytes straight into the GitHub repo (via the
-// Contents API) under blog-images/ — Netlify serves it from there once the
-// resulting push redeploys the site (usually well under a minute). Avoids
-// needing any paid storage service; the relative path works from any page
-// on the site since everything lives at the repo root.
-export async function uploadImageToGitHub(buffer, mimeType, slug) {
-  if (!GITHUB_TOKEN) throw new Error('Missing GITHUB_TOKEN env var.');
-  const ext = mimeType.includes('png') ? 'png' : mimeType.includes('webp') ? 'webp' : 'jpg';
-  const filename = `${slug}-${Date.now().toString(36)}.${ext}`;
-  const path = `blog-images/${filename}`;
-
-  const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      Accept: 'application/vnd.github+json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      message: `Add blog image: ${filename}`,
-      content: buffer.toString('base64'),
-      branch: 'main',
-    }),
-    signal: AbortSignal.timeout(20000),
-  });
-
-  if (!res.ok) {
-    throw new Error(`GitHub image upload failed ${res.status}: ${await res.text()}`);
-  }
-
-  return path;
-}
-
-// Main image pipeline: an original image (better fit for niche topics than
-// stock photo search) beats a generic stock photo, so try generation first
-// — Pollinations (free), then Gemini (currently paid-tier only, kept for
-// when/if that changes) — and only fall back to Unsplash if both fail.
-export async function getBlogImage({ query, title, slug, excludeUrls = [] }) {
-  const prompt = `A professional, clean editorial illustration for an Indian financial consultancy's blog article titled "${title}". Topic: ${query}. Style: modern flat illustration, minimalist, no text or letters or numbers anywhere in the image, 16:9 landscape composition suitable as a website blog header, color palette of navy blue, emerald green, and gold.`;
-
-  const pollinated = await generateImageWithPollinations(prompt);
-  if (pollinated) {
-    try {
-      const url = await uploadImageToGitHub(pollinated.buffer, pollinated.mimeType, slug);
-      return { url, creditName: null, creditUrl: null, source: 'pollinations' };
-    } catch (err) {
-      console.warn('GitHub upload failed for Pollinations image: ' + err.message);
-    }
-  }
-
-  const generated = await generateImageWithGemini(prompt);
-  if (generated) {
-    try {
-      const url = await uploadImageToGitHub(generated.buffer, generated.mimeType, slug);
-      return { url, creditName: null, creditUrl: null, source: 'gemini' };
-    } catch (err) {
-      console.warn('GitHub upload failed for Gemini image: ' + err.message);
-    }
-  }
-
+// Image pipeline: Unsplash only (Gemini's image model needs a paid Google
+// Cloud plan — confirmed via a 429 "limit: 0" free-tier response — and a
+// free third-party generator wasn't worth the added complexity here).
+export async function getBlogImage({ query, excludeUrls = [] }) {
   const unsplash = await fetchUnsplashImage(query, excludeUrls);
   return unsplash ? { ...unsplash, source: 'unsplash' } : null;
 }

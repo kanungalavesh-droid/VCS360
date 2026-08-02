@@ -47,13 +47,11 @@ export const handler = async (event) => {
 
     const usedUrls = await getUsedImageUrls();
     if (post.imageUrl) usedUrls.push(post.imageUrl); // never pick the same image again
-    const image = await getBlogImage({ query: imageQuery, title: post.title, slug, excludeUrls: usedUrls });
+    const image = await getBlogImage({ query: imageQuery, excludeUrls: usedUrls });
     if (!image) {
-      return { statusCode: 404, body: JSON.stringify({ error: 'Could not generate or find an alternative image.' }) };
+      return { statusCode: 404, body: JSON.stringify({ error: 'No alternative image found for that query.' }) };
     }
-    const imageRelevance = (image.source === 'unsplash')
-      ? await checkImageRelevance(image.url, post.title, post.excerpt)
-      : null;
+    const imageRelevance = await checkImageRelevance(image.url, post.title, post.excerpt);
 
     await docRef.update({
       imageUrl: image.url,
