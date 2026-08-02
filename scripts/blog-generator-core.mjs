@@ -11,9 +11,9 @@ const {
   GEMINI_IMAGE_MODEL = 'gemini-2.5-flash-image',
   UNSPLASH_ACCESS_KEY,
   FIREBASE_SERVICE_ACCOUNT,
+  GITHUB_TOKEN,
+  GITHUB_REPO = 'kanungalavesh-droid/VCS360',
 } = process.env;
-
-const STORAGE_BUCKET = 'vcs360-website.firebasestorage.app';
 
 export const AUTHOR_NAME = 'VCS Advisory Team';
 
@@ -23,10 +23,7 @@ function getApp() {
   // may re-enter this module without a fresh process), avoid re-init errors.
   return admin.apps.length
     ? admin.app()
-    : admin.initializeApp({
-        credential: admin.credential.cert(JSON.parse(FIREBASE_SERVICE_ACCOUNT)),
-        storageBucket: STORAGE_BUCKET,
-      });
+    : admin.initializeApp({ credential: admin.credential.cert(JSON.parse(FIREBASE_SERVICE_ACCOUNT)) });
 }
 
 export function getDb() {
@@ -254,16 +251,37 @@ export async function generateImageWithGemini(prompt) {
   }
 }
 
-// Uploads generated image bytes to Firebase Storage and returns a public
-// download URL. Relies on storage.rules to allow public reads of
-// blog-images/** — does not touch object ACLs (incompatible with the
-// uniform bucket-level access Firebase projects use by default).
-export async function uploadImageToStorage(buffer, mimeType, slug) {
+// Commits generated image bytes straight into the GitHub repo (via the
+// Contents API) under blog-images/ — Netlify serves it from there once the
+// resulting push redeploys the site (usually well under a minute). Avoids
+// needing any paid storage service; the relative path works from any page
+// on the site since everything lives at the repo root.
+export async function uploadImageToGitHub(buffer, mimeType, slug) {
+  if (!GITHUB_TOKEN) throw new Error('Missing GITHUB_TOKEN env var.');
   const ext = mimeType.includes('png') ? 'png' : mimeType.includes('webp') ? 'webp' : 'jpg';
-  const path = `blog-images/${slug}-${Date.now().toString(36)}.${ext}`;
-  const bucket = getApp().storage().bucket();
-  await bucket.file(path).save(buffer, { metadata: { contentType: mimeType } });
-  return `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(path)}?alt=media`;
+  const filename = `${slug}-${Date.now().toString(36)}.${ext}`;
+  const path = `blog-images/${filename}`;
+
+  const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
+      Accept: 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message: `Add blog image: ${filename}`,
+      content: buffer.toString('base64'),
+      branch: 'main',
+    }),
+    signal: AbortSignal.timeout(20000),
+  });
+
+  if (!res.ok) {
+    throw new Error(`GitHub image upload failed ${res.status}: ${await res.text()}`);
+  }
+
+  return path;
 }
 
 // Main image pipeline: try an original Gemini-generated image first (better
@@ -275,10 +293,10 @@ export async function getBlogImage({ query, title, slug, excludeUrls = [] }) {
   const generated = await generateImageWithGemini(prompt);
   if (generated) {
     try {
-      const url = await uploadImageToStorage(generated.buffer, generated.mimeType, slug);
+      const url = await uploadImageToGitHub(generated.buffer, generated.mimeType, slug);
       return { url, creditName: null, creditUrl: null, source: 'gemini' };
     } catch (err) {
-      console.warn('Firebase Storage upload failed, falling back to Unsplash: ' + err.message);
+      console.warn('GitHub image upload failed, falling back to Unsplash: ' + err.message);
     }
   }
 
