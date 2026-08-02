@@ -211,10 +211,39 @@ export async function fetchUnsplashImage(query, excludeUrls = []) {
   }
 }
 
+// Free, no-signup image generation (wraps open models like Flux). This is
+// the primary image source since Gemini's image model requires a paid
+// Google Cloud plan (confirmed via a 429 "limit: 0" free-tier response).
+export async function generateImageWithPollinations(prompt) {
+  try {
+    const seed = Math.floor(Math.random() * 1e9);
+    const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=576&nologo=true&seed=${seed}`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(45000) });
+
+    if (!res.ok) {
+      console.warn(`Pollinations image generation failed ${res.status}: ${(await res.text().catch(() => '')).slice(0, 300)}`);
+      return null;
+    }
+
+    const contentType = (res.headers.get('content-type') || '').split(';')[0];
+    if (!contentType.startsWith('image/')) {
+      console.warn('Pollinations returned non-image content-type: ' + contentType);
+      return null;
+    }
+
+    return { buffer: Buffer.from(await res.arrayBuffer()), mimeType: contentType };
+  } catch (err) {
+    console.warn('Pollinations image generation error: ' + err.message);
+    return null;
+  }
+}
+
 // Asks Gemini to generate an original cover image for the post. Returns raw
 // image bytes, or null on any failure (wrong/unavailable model, quota, etc.)
-// — the caller falls back to Unsplash in that case, so a bad model name
-// here never breaks generation, it just quietly degrades.
+// — the caller falls back further in that case, so this never breaks
+// generation, it just quietly degrades. Currently expected to fail on the
+// free tier (limit: 0) — kept as a secondary attempt in case billing is
+// enabled later, at which point this starts working with no code changes.
 export async function generateImageWithGemini(prompt) {
   if (!GEMINI_API_KEY) return null;
   try {
@@ -284,11 +313,22 @@ export async function uploadImageToGitHub(buffer, mimeType, slug) {
   return path;
 }
 
-// Main image pipeline: try an original Gemini-generated image first (better
-// fit for niche topics than stock photo search), fall back to Unsplash if
-// generation or upload fails for any reason.
+// Main image pipeline: an original image (better fit for niche topics than
+// stock photo search) beats a generic stock photo, so try generation first
+// — Pollinations (free), then Gemini (currently paid-tier only, kept for
+// when/if that changes) — and only fall back to Unsplash if both fail.
 export async function getBlogImage({ query, title, slug, excludeUrls = [] }) {
   const prompt = `A professional, clean editorial illustration for an Indian financial consultancy's blog article titled "${title}". Topic: ${query}. Style: modern flat illustration, minimalist, no text or letters or numbers anywhere in the image, 16:9 landscape composition suitable as a website blog header, color palette of navy blue, emerald green, and gold.`;
+
+  const pollinated = await generateImageWithPollinations(prompt);
+  if (pollinated) {
+    try {
+      const url = await uploadImageToGitHub(pollinated.buffer, pollinated.mimeType, slug);
+      return { url, creditName: null, creditUrl: null, source: 'pollinations' };
+    } catch (err) {
+      console.warn('GitHub upload failed for Pollinations image: ' + err.message);
+    }
+  }
 
   const generated = await generateImageWithGemini(prompt);
   if (generated) {
@@ -296,7 +336,7 @@ export async function getBlogImage({ query, title, slug, excludeUrls = [] }) {
       const url = await uploadImageToGitHub(generated.buffer, generated.mimeType, slug);
       return { url, creditName: null, creditUrl: null, source: 'gemini' };
     } catch (err) {
-      console.warn('GitHub image upload failed, falling back to Unsplash: ' + err.message);
+      console.warn('GitHub upload failed for Gemini image: ' + err.message);
     }
   }
 
