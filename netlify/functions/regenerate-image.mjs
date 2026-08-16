@@ -6,7 +6,7 @@ import {
   getDb, getBlogImage, checkImageRelevance, getUsedImageUrls, getAdminAuth,
 } from '../../scripts/blog-generator-core.mjs';
 
-const ADMIN_EMAILS = ['kanunga.lavesh@gmail.com'];
+const ADMIN_EMAILS = ['kanunga.lavesh@gmail.com', 'ronakkanunga@gmail.com'];
 
 export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {

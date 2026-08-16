@@ -5,7 +5,7 @@
 
 import { fetchTrendingHeadlines, HIGH_INTENT_KEYWORDS, getAdminAuth } from '../../scripts/blog-generator-core.mjs';
 
-const ADMIN_EMAILS = ['kanunga.lavesh@gmail.com'];
+const ADMIN_EMAILS = ['kanunga.lavesh@gmail.com', 'ronakkanunga@gmail.com'];
 
 function pickRandom(arr, n) {
   const copy = [...arr];

@@ -9,7 +9,7 @@ import {
 } from '../../scripts/blog-generator-core.mjs';
 
 // Keep in sync with the admin allowlist in firestore.rules.
-const ADMIN_EMAILS = ['kanunga.lavesh@gmail.com'];
+const ADMIN_EMAILS = ['kanunga.lavesh@gmail.com', 'ronakkanunga@gmail.com'];
 
 export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
