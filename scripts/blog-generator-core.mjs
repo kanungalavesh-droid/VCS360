@@ -121,17 +121,17 @@ export async function fetchTrendingHeadline() {
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // Gemini occasionally returns 503 "high demand, try again later" or 429
-// rate-limit responses that are almost always transient — retry once with
-// a short backoff before giving up, instead of failing the whole run over
-// a blip on Google's end. Kept short (not multiple long retries) because
-// this same code path also runs inside a synchronous Netlify function
-// (the admin.html "Generate" button), which has a ~10s execution limit.
-async function fetchWithRetry(url, options, retries = 1, delayMs = 3000) {
+// rate-limit responses that are almost always transient — retry a couple
+// of times with a short backoff before giving up, instead of failing the
+// whole run over a blip on Google's end. One retry wasn't always enough
+// during sustained demand spikes, so this now backs off twice (3s, 5s).
+async function fetchWithRetry(url, options, retries = 2, delays = [3000, 5000]) {
   for (let attempt = 0; ; attempt++) {
     const res = await fetch(url, options);
     if (res.ok || attempt >= retries || (res.status !== 503 && res.status !== 429)) {
       return res;
     }
+    const delayMs = delays[Math.min(attempt, delays.length - 1)];
     console.warn(`Gemini returned ${res.status}, retrying in ${delayMs / 1000}s (attempt ${attempt + 1}/${retries})...`);
     await sleep(delayMs);
   }
@@ -268,7 +268,7 @@ export async function checkImageRelevance(imageUrl, title, excerpt) {
       },
     };
 
-    const res = await fetch(
+    const res = await fetchWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
       { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(15000) }
     );
