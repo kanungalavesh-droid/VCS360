@@ -1335,7 +1335,7 @@ src="https://www.facebook.com/tr?id=3867173873424824&ev=PageView&noscript=1"
 </section>
 
 <!-- LEAD FORM -->
-<section class="lead-bg" id="contact">
+<section class="lead-bg">
   <div class="section-inner">
     <div class="lead-inner">
       <div class="lead-left fade-up">
@@ -1371,16 +1371,16 @@ src="https://www.facebook.com/tr?id=3867173873424824&ev=PageView&noscript=1"
           </div>
         </div>
       </div>
-      <div class="lead-form-card fade-up">
+      <div class="lead-form-card fade-up" id="contact">
         <h3>Book Your Free Consultation</h3>
         <p>No fees. No commitments. Just expert guidance.</p>
         <div class="field-row">
-          <input class="field-light" placeholder="Full Name" type="text" id="lf-name"/>
-          <input class="field-light" placeholder="Mobile Number" type="tel" id="lf-phone"/>
+          <input class="field-light" placeholder="Full Name" type="text" id="lf-name" name="name" autocomplete="name"/>
+          <input class="field-light" placeholder="Mobile Number" type="tel" id="lf-phone" name="phone" autocomplete="tel"/>
         </div>
-        <input class="field-light" placeholder="Email Address" type="email" id="lf-email" style="width:100%;"/>
+        <input class="field-light" placeholder="Email Address" type="email" id="lf-email" name="email" autocomplete="email" style="width:100%;"/>
         <div class="field-row">
-          <input class="field-light" placeholder="City" type="text" id="lf-city"/>
+          <input class="field-light" placeholder="City" type="text" id="lf-city" name="city" autocomplete="address-level2"/>
           <select class="field-light" id="lf-service">
             <option value="" disabled selected>Service Required</option>
             <option>Taxation & ITR</option>
